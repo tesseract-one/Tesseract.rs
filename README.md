@@ -1,2 +1,2 @@
 # Tesseract.rs
-Tesseract Protocol libraries for Rust
+Tesseract Protocol implementation in Rust
