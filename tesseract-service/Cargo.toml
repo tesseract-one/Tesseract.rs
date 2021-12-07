@@ -1,0 +1,21 @@
+# Licensed under the Apache License, Version 2.0.
+
+[package]
+name = "tesseract-service"
+version = "0.1.0"
+authors = ["Tesseract Systems, Inc. <contact@tesseract.one>"]
+description = "Tesseract Service implementation. Typically for use on the Wallet side."
+edition = "2018"
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1"
+futures = { version = "0.3", features = ["thread-pool"] }
+
+serde = { version = "1.0", features = ["derive"] }
+
+atomic_refcell = "0.1"
+
+tesseract = { path = "../tesseract" }

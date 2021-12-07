@@ -1,0 +1,10 @@
+# Licensed under the Apache License, Version 2.0.
+
+[workspace]
+
+members = [
+    "tesseract",
+    "tesseract-client",
+    "tesseract-service",
+    "tesseract-playground",
+]

@@ -1,0 +1,18 @@
+# Licensed under the Apache License, Version 2.0.
+
+[package]
+name = "tesseract"
+version = "0.1.0"
+authors = ["Tesseract Systems, Inc. <contact@tesseract.one>"]
+description = "Base code for both, Tesseract client and service."
+edition = "2018"
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_cbor = "0.11"
+
+futures = "0.3"
