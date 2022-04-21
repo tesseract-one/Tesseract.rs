@@ -120,7 +120,10 @@ fn main() {
     tp.spawn_ok(failed.map(|res| match res {
         Ok(res) => println!("@@@@WOW@@@@ we've got response: {}", res),
         Err(err) => match &err.kind {
-            kind => println!("!!!!UGH!!!! we've got an error: {}\n{}", kind, err),
+            kind => println!(
+                "!!!!UGH!!!! we've got an error (that's ok): {}\n{}",
+                kind, err
+            ),
         },
     }));
 
