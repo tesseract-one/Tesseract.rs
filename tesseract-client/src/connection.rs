@@ -22,7 +22,7 @@ use futures::lock::Mutex;
 use futures::stream::{Stream, StreamExt};
 
 use async_trait::async_trait;
-use atomic_refcell::AtomicRefCell;
+//use atomic_refcell::AtomicRefCell;
 
 use tesseract::Result;
 
@@ -36,7 +36,7 @@ pub struct CachedConnection<
     S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync,
 > {
     cached: Mutex<Option<Arc<dyn Connection + Sync + Send>>>,
-    stream: AtomicRefCell<Pin<Box<S>>>,
+    stream: Mutex<Pin<Box<S>>>,
 }
 
 impl<S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync>
@@ -44,7 +44,7 @@ impl<S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync>
 {
     pub fn new(stream: S) -> Self {
         CachedConnection {
-            stream: AtomicRefCell::new(Box::pin(stream)),
+            stream: Mutex::new(Box::pin(stream)),
             cached: Mutex::new(None),
         }
     }
@@ -56,7 +56,8 @@ impl<S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync>
         return match cached {
             Some(p) => Ok(Arc::clone(&p)),
             None => {
-                let mut stream = self.stream.borrow_mut();
+                let mut stream_lock = self.stream.lock().await;
+                let stream = &mut *stream_lock;
                 let new = stream.next().await.unwrap()?; //the stream is neverending, unwrap is fine
 
                 let to_store = Arc::from(new);
