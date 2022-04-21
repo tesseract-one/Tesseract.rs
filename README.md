@@ -100,4 +100,8 @@ In the case of playground example, this snippet should print the following:
 
 `sign_transaction("testTransaction")` is test method, that will be replaced once we have an actual implementation for Polkadot network.
 
+## License
+
+Tesseract.rs can be used, distributed and modified under [the Apache 2.0 license](LICENSE).
+
 
