@@ -35,7 +35,7 @@ pub trait Connection {
 pub struct CachedConnection<
     S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync,
 > {
-    cached: Mutex<AtomicRefCell<Option<Arc<dyn Connection + Sync + Send>>>>,
+    cached: Mutex<Option<Arc<dyn Connection + Sync + Send>>>,
     stream: AtomicRefCell<Pin<Box<S>>>,
 }
 
@@ -45,23 +45,23 @@ impl<S: Stream<Item = Result<Box<dyn Connection + Send + Sync>>> + Send + Sync>
     pub fn new(stream: S) -> Self {
         CachedConnection {
             stream: AtomicRefCell::new(Box::pin(stream)),
-            cached: Mutex::new(AtomicRefCell::new(None)),
+            cached: Mutex::new(None),
         }
     }
 
     async fn connection(self: Arc<Self>) -> Result<Arc<dyn Connection + Sync + Send>> {
-        let lock = self.cached.lock().await;
-        let mut cached = lock.borrow_mut();
+        let mut lock = self.cached.lock().await;
+        let cached = &*lock;
 
-        return match &*cached {
-            Some(p) => Ok(Arc::clone(p)),
+        return match cached {
+            Some(p) => Ok(Arc::clone(&p)),
             None => {
                 let mut stream = self.stream.borrow_mut();
                 let new = stream.next().await.unwrap()?; //the stream is neverending, unwrap is fine
 
                 let to_store = Arc::from(new);
                 let result = Arc::clone(&to_store);
-                *cached = Some(to_store);
+                *lock = Some(to_store);
                 Ok(result)
             }
         };
