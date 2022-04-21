@@ -66,3 +66,23 @@ where
         }
     }
 }
+
+//This delegate has a special purpose - to be used with single transport only to omit the transport selection logic.
+pub struct SingleTransportDelegate {}
+
+impl SingleTransportDelegate {
+    pub fn arc() -> Arc<Self> {
+        Arc::new(Self {})
+    }
+}
+
+#[async_trait]
+impl Delegate for SingleTransportDelegate {
+    async fn select_transport(
+        &self,
+        transports: &HashMap<String, transport::Status>,
+    ) -> Option<String> {
+        assert_eq!(1, transports.len(), "Single transport delegate is designed to work only for a single transport. If you want to use more than one transport option, please, consider implementing a custom delegate.");
+        transports.keys().next().map(String::clone)
+    }
+}

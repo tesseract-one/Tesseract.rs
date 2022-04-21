@@ -15,7 +15,7 @@
 //===----------------------------------------------------------------------===//
 
 mod connection;
-mod delegate;
+pub mod delegate;
 mod service;
 pub mod tesseract;
 pub mod transport;

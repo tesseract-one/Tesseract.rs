@@ -95,18 +95,18 @@ fn main() {
     //WALLET PART END//
 
     //DAPP PART BEGIN//
-    let delegate = Arc::new(ClientDelegate {});
-    let client_tesseract = tesseract_client::Tesseract::new(delegate)
-        .transport(plt::client::LocalTransport::new(&link));
+    //let delegate = Arc::new(ClientDelegate {});
+    //let client_tesseract = tesseract_client::Tesseract::new(delegate)
+    let client_tesseract = tesseract_client::Tesseract::new(
+        tesseract_client::delegate::SingleTransportDelegate::arc(),
+    )
+    .transport(plt::client::LocalTransport::new(&link));
     let client_service = client_tesseract.service(polkadot::Polkadot::Network);
-    let signed = {
-        use polkadot::client::PolkadotService;
-        Arc::clone(&client_service).sign_transaction("testTransaction")
-    };
-    let failed = {
-        use polkadot::client::PolkadotService;
-        Arc::clone(&client_service).sign_transaction("make_error")
-    };
+
+    use polkadot::client::PolkadotService;
+
+    let signed = Arc::clone(&client_service).sign_transaction("testTransaction");
+    let failed = Arc::clone(&client_service).sign_transaction("make_error");
 
     let tp = futures::executor::ThreadPool::new().unwrap();
 
