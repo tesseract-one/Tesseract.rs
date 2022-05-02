@@ -4,9 +4,9 @@
 	</a>
 </p>
 
-# Tesseract Client
+### Tesseract Client allows to connect to the wallets through Tesseract protocol.
 
-Tesseract Client allows to connect dApps to any Tesseract compatible Wallet.
+#### A good example might be a dApp that need to request an address or sign a transaction.
 
 ## Getting Started
 
