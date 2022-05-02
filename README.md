@@ -1,3 +1,10 @@
+<p align="center">
+	<a href="http://tesseract.one/">
+		<img alt="Tesseract" src ="./VerticalBlack.svg" height=256/>
+	</a>
+</p>
+
+
 # Tesseract.rs
 
 Tesseract is a protocol that allows connecting dApps and wallets seamlessly, regardless of the blockchain protocol, type of the wallet, or the dApp.
