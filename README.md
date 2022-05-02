@@ -5,9 +5,45 @@
 </p>
 
 
-# Tesseract.rs
+### [Tesseract](https://tesseract.one/) is a protocol that allows connecting dApps and wallets seamlessly, regardless of the blockchain protocol, type of the wallet, or the dApp.
 
-Tesseract is a protocol that allows connecting dApps and wallets seamlessly, regardless of the blockchain protocol, type of the wallet, or the dApp.
+#### Tesseract aims to improve the usability of the dApps without compromising security or decentralization.
+
+## Getting started
+
+First, make sure, please, you have followed the [installation](#installation) section steps. Here we describe how to start using Tesseract in your dApp. To make your wallet Tesseract-compatible, please refer to the [Wallet Documentation](./tesseract-service/README.MD) section.
+
+### Initialize Tesseract Client
+
+```rust
+use tesseract_client;
+
+let tesseract = tesseract_client::Tesseract::new(
+	tesseract_client::delegate::SingleTransportDelegate::arc(),
+).transport(/*your transport here*/);
+```
+
+### Select the Blockchain Network (i.e. Polkadot)
+
+```rust
+let service = tesseract.service(polkadot::Polkadot::Network);
+```
+
+### Call a method (i.e. sign transaction)
+
+```rust
+use polkadot::client::PolkadotService;
+
+let signed = Arc::clone(&service).sign_transaction("testTransaction");
+let signed = futures::executor::block_on(signed);
+
+println!("Signed transaction: {}", signed.unwrap());
+```
+
+In the case of playground example, this snippet should print the following:
+`Signed transaction: testTransaction_signed!`.
+
+`sign_transaction("testTransaction")` is test method, that will be replaced once we have an actual implementation for Polkadot network.
 
 ## Installation
 
