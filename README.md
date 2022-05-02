@@ -62,7 +62,7 @@ The Tesseract Rust library is a Core implementation of Tesseract Protocol and th
 
 The documentation is split into several sections respectively:
 * [Tesseract Overview](#Background) - general info about how Tesseract Protocol works
-* [Tesseract Client](./tesseracr-client/) - for dApp developers
+* [Tesseract Client](./tesseract-client/) - for dApp developers
 * [Tesseract Service](./tesseract-service/) - for wallet developers
 * Extending Tesseract - for Blockchain protocol developers [TBD]
 
