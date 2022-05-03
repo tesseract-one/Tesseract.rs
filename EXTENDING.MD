@@ -59,7 +59,7 @@ Above we have declared `Polkadot`, which is an object serving as an ID for our P
 
 ### Protocol Client
 
-This pard defines the API for the client side (the dApp) to be used together with `tesseract-client`.
+This part defines the API for the client side (the dApp) to be used together with `tesseract-client`.
 
 First of all we define the API of the service.
 
@@ -181,7 +181,7 @@ Let's take as an example a `LocalTransport` that is available in `tesseract-play
 #[async_trait]
 impl Transport for LocalTransport {
     fn id(&self) -> String {
-        PLT.to_owned()
+        "plt".to_owned()
     }
 
     async fn status(self: Arc<Self>) -> Status {
@@ -225,7 +225,7 @@ impl Connection for ClientLocalConnection {
 }
 ```
 
-The exmple shows how in the `playground` the demo `Connection` works with a local link. Basically, every connection has to implement two methods:
+The example shows how in the `playground` the demo `Connection` works with a local link. Basically, every connection has to implement two methods:
 * `async fn send(self: Arc<Self>, request: Vec<u8>) -> Result<()>` - is called whenever Tesseract needs to send the data to the Wallet (pretty much when making a request).
 * `async fn receive(self: Arc<Self>) -> Result<Vec<u8>>` - after succesfully sending a request Tesseract calls `receive` method and waits for the response to arrive.
 
