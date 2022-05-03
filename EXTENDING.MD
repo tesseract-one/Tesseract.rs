@@ -231,6 +231,31 @@ The example shows how in the `playground` the demo `Connection` works with a loc
 
 Note that all the methods are `async` and require proper *async* implementation.
 
+### Transport Service
+
+The API to implement a `Transport` on the Wallet side is even easier. It's all around two `trait` definitions.
+
+```rust
+pub trait Transport {
+    fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport>;
+}
+```
+
+The `bind` method is called whenever a transport needs to be initialized. `processor` is Tesseract's internal object implementing `TransportProcessor` trait.
+
+```rust
+#[async_trait]
+pub trait TransportProcessor {
+    async fn process(self: Arc<Self>, data: &[u8]) -> Vec<u8>;
+}
+```
+
+The `process` method is to be called by a transport whenever a new request comes in. This API might change in the future while we implement more transports to accomodate more advanced scenarious.
+
+A good example for understanding might be a TCP/IP transport. Transport creates a server socket (when asked to initialize with `bind` method) and whenever a new connection is created along with data received the `process` method should be called.
+
+Please, consider checking our the [tesseract-playground](./tesseract-playground/src/plt/service.rs) for more details on this subject.
+
 ## Things to consider
 
 Even though we'de like to show how Tesseract works and how it can be extended, this page is only intended for advanced use - pretty much for our developers and Blockchain Networks who'd like to get integrated with Tesseract and transport developers.
