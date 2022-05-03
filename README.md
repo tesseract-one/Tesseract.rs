@@ -77,6 +77,43 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 * **Secure by Design** - Tesseract is designed in a way that it never needs access to the Private Keys, thus keeping security at the level provided by the wallet of choice.
 * **Decentralized** - Tesseract does not need a central server to function, and does not need to store any user data or private keys on its servers.
 
+## Roadmap
+
+* v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
+	* Android support
+	* iOS support
+
+* v0.3 - Polkadot network support
+
+* v0.4 - demo applications
+	* Android Wallet
+	* Androif dApp
+	* iOS Wallet
+	* iOS dApps
+
+* v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
+	* Swift
+	* Kotlin/Java
+
+* v1.0 - first stable release
+
+* v1.0+ - more transports and more blockchain networks
+	* browser dApps
+	* desktop dApps
+	* various transports
+	* more Blockchain Networks
+	* more native language libraries (i.e. JS)
+
+## Changelog
+
+* v0.1.1 - added Playground that implements mocks and tests all the frameworks concepts
+
+* v0.1 - framework in Rust that implements all the concepts of Tesseract Protocol
+	* framework itself
+	* client API (for dApp develpers)
+	* service API (for Wallet developers)
+	* transports API (to create ways to communicate between dApps and Wallets, i.e. TCP/IP, IPC, etc.)
+	* protocols API (APIs to implement blockchain networks - i.e. Polkadot, Bitcoin, Ethereum, etc.)
 
 ## License
 
