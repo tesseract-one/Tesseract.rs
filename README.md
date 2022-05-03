@@ -64,7 +64,7 @@ The documentation is split into several sections respectively:
 * [Tesseract Overview](#Background) - general info about how Tesseract Protocol works
 * [Tesseract Client](./tesseract-client/) - for dApp developers
 * [Tesseract Service](./tesseract-service/) - for wallet developers
-* Extending Tesseract - for Blockchain protocol developers [TBD]
+* [Extending Tesseract](./EXTENDING.MD) - for Blockchain protocol developers [TBD]
 
 ## Background
 
