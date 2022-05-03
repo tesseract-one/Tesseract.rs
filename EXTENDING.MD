@@ -10,6 +10,12 @@
 
 ## General
 
+This page explains how to extend Tesseract and is split in two topics:
+* [Protocols](#Protocol) - this section describes how to integrate Tesseract with more Blockchain Networks (i.e. Bitcoin, Ethereum, etc.)
+* [Transports](#Transport) - this section describes how to add more ways (TCP/IP, QRcode, IPC, etc.) how the dApp can communicate with the wallet.
+
+If you want to add Tesseract support to your dApp, please, consider reading [tesseract-client README](./tesseract-client/) instead. For the wallet developers who is considering integrating Tesseract a [dedicated page](./tesseract-service/) is also available.
+
 Tesseract is split into three separate pieces:
 * `tesseract` - common code that is used by both Wallet and dApp
 * `tesseract-client` - designed to be used in a dApp
@@ -164,6 +170,74 @@ impl<S: PolkadotService> PolkadotExecutor<S> {
 That's it! Polkadot can now be used with Tesseract.
 
 ## Transport
+
+Transports are the implementations of ways how the dApp can connect to a Wallet. Examples could be TCP/IP or Interprocess Communication... Or Pigeon Post? Actually it's only half-joke - Tesseract is that flexible it could potentially work even with the Pidgeon Post :)
+
+Let's take as an example a `LocalTransport` that is available in `tesseract-playground` for demonstration purposes. We'll omit from here actual technical details of how the local transport transfers data, but will rather concentrate on the APIs that need to be implemented on both: the client and service sides.
+
+### Transport Client
+
+```rust
+#[async_trait]
+impl Transport for LocalTransport {
+    fn id(&self) -> String {
+        PLT.to_owned()
+    }
+
+    async fn status(self: Arc<Self>) -> Status {
+        if self.link.ready() {
+            Status::Ready
+        } else {
+            Status::Unavailable("The link is not set in mock transport".to_owned())
+        }
+    }
+
+    fn connect(&self) -> Box<dyn Connection + Sync + Send> {
+        Box::new(ClientLocalConnection::new(&self.link))
+    }
+}
+```
+
+Every transport has to implement three methods:
+* `id(&self) -> String` - a transport has to have a unique ID. It's used in the transport selection process, when Tesseract attempts to connect to a Wallet.
+* `async fn status(self: Arc<Self>) -> Status` - provide a current transport status: `Ready`, `Unavailable`, `Error`. In case of the local transport the link tells us if it's ready or not and we just pass it further. The same idea can be applied to the socket for example.
+* `fn connect(&self) -> Box<dyn Connection + Sync + Send>` - this method is called every time Tesseract needs a new connection to the Wallet.
+
+Let's see how to implement a `Connection`.
+
+```rust
+#[async_trait]
+impl Connection for ClientLocalConnection {
+    async fn send(self: Arc<Self>, request: Vec<u8>) -> Result<()> {
+        let data = Arc::clone(&self.link).send_receive(request).await;
+        let mut responses = self.responses.lock().await;
+        responses.push_back(data);
+        Ok(())
+    }
+
+    async fn receive(self: Arc<Self>) -> Result<Vec<u8>> {
+        let mut responses = self.responses.lock().await;
+        match responses.pop_back() {
+            Some(data) => Ok(data),
+            None => Err(Error::kinded(ErrorKind::Weird)),
+        }
+    }
+}
+```
+
+The exmple shows how in the `playground` the demo `Connection` works with a local link. Basically, every connection has to implement two methods:
+* `async fn send(self: Arc<Self>, request: Vec<u8>) -> Result<()>` - is called whenever Tesseract needs to send the data to the Wallet (pretty much when making a request).
+* `async fn receive(self: Arc<Self>) -> Result<Vec<u8>>` - after succesfully sending a request Tesseract calls `receive` method and waits for the response to arrive.
+
+Note that all the methods are `async` and require proper *async* implementation.
+
+## Things to consider
+
+Even though we'de like to show how Tesseract works and how it can be extended, this page is only intended for advanced use - pretty much for our developers and Blockchain Networks who'd like to get integrated with Tesseract and transport developers.
+
+**If you only consider to use Tesseract in your dApp or to integrate Tesseract in your wallet - you don't really need to care about what's described above.**
+
+Please, feel free to contact us through a github ticket or our [website](https://tesseract.one) if you need more info.
 
 ## License
 
