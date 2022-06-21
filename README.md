@@ -51,7 +51,7 @@ This section will get populated once we have the Rust implementation finished an
 * Install your Rust environment: <https://www.rust-lang.org/tools/install>
 * Clone this repo: `git clone https://github.com/tesseract-one/Tesseract.rs.git`
 * Go to the playground `cd Tesseract.rs/tesseract-playground/`
-* Run the playground `cargo run`
+* Run the playground `cargo +nightly run`
 
 ## Usage
 
