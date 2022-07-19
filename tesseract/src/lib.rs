@@ -20,6 +20,9 @@ pub mod protocol;
 pub mod response;
 pub mod serialize;
 
+#[cfg(feature = "client")]
+pub mod client;
+
 pub use error::Error;
 pub use error::ErrorKind;
 pub use error::Result;
