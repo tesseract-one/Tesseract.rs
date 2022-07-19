@@ -22,9 +22,9 @@ use futures::future::FutureExt;
 use futures::stream;
 use futures::stream::Stream;
 
-use tesseract::serialize::Serializer;
-use tesseract::Protocol;
-use tesseract::{Result, ResultDefs};
+use crate::serialize::Serializer;
+use crate::Protocol;
+use crate::{Result, ResultDefs};
 
 use super::connection::{CachedConnection, Connection, QueuedConnection, ServiceConnection};
 use super::delegate::AsyncDelegate;

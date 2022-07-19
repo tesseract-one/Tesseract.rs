@@ -22,10 +22,10 @@ use std::sync::{
 use async_trait::async_trait;
 use serde::{de::DeserializeOwned, Serialize};
 
-use tesseract::envelope::{RequestEnvelope, ResponseEnvelope};
-use tesseract::serialize::Serializer;
-use tesseract::Protocol;
-use tesseract::{Error, ErrorKind, Result};
+use crate::envelope::{RequestEnvelope, ResponseEnvelope};
+use crate::serialize::Serializer;
+use crate::Protocol;
+use crate::{Error, ErrorKind, Result};
 
 use super::connection::ServiceConnection;
 

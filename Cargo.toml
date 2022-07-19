@@ -4,7 +4,6 @@
 
 members = [
     "tesseract",
-    "tesseract-client",
     "tesseract-service",
     "tesseract-playground",
 ]

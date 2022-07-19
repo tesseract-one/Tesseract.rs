@@ -31,7 +31,7 @@ use tesseract::Error;
 use tesseract::ErrorKind;
 use tesseract::Result;
 
-use tesseract_client;
+use tesseract::client;
 
 use plt::LocalLink;
 
@@ -71,10 +71,10 @@ impl polkadot::service::PolkadotService for TestPolkadotService {
 struct ClientDelegate {}
 
 #[async_trait]
-impl tesseract_client::Delegate for ClientDelegate {
+impl client::Delegate for ClientDelegate {
     async fn select_transport(
         &self,
-        _ /*transports*/: &HashMap<String, tesseract_client::transport::Status>,
+        _ /*transports*/: &HashMap<String, client::transport::Status>,
     ) -> Option<String> {
         println!("@#$%^DELEGATE#$%^&* has been called. Basically it's a place to implement custom transport selection.\nSome default transport selection will be provided in os specific distributions (i.e. Swift or Korlin wrappers)");
         Some("plt".to_owned()) //playground_local_transport - plt
@@ -97,10 +97,8 @@ fn main() {
     //DAPP PART BEGIN//
     //let delegate = Arc::new(ClientDelegate {});
     //let client_tesseract = tesseract_client::Tesseract::new(delegate)
-    let client_tesseract = tesseract_client::Tesseract::new(
-        tesseract_client::delegate::SingleTransportDelegate::arc(),
-    )
-    .transport(plt::client::LocalTransport::new(&link));
+    let client_tesseract = client::Tesseract::new(client::delegate::SingleTransportDelegate::arc())
+        .transport(plt::client::LocalTransport::new(&link));
     let client_service = client_tesseract.service(polkadot::Polkadot::Network);
 
     use polkadot::client::PolkadotService;

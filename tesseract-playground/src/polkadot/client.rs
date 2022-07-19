@@ -20,8 +20,8 @@ use async_trait::async_trait;
 
 use tesseract::Result;
 
-use tesseract_client::ErasedService;
-use tesseract_client::Service;
+use tesseract::client::ErasedService;
+use tesseract::client::Service;
 
 use super::Polkadot;
 use super::SignTransactionRequest;

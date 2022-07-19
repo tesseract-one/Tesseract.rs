@@ -25,9 +25,9 @@ use tesseract::Error;
 use tesseract::ErrorKind;
 use tesseract::Result;
 
-use tesseract_client::transport::Status;
-use tesseract_client::Connection;
-use tesseract_client::Transport;
+use tesseract::client::transport::Status;
+use tesseract::client::Connection;
+use tesseract::client::Transport;
 
 use super::link::LocalLink;
 use super::PLT;

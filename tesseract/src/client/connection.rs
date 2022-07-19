@@ -24,7 +24,7 @@ use futures::stream::{Stream, StreamExt};
 use async_trait::async_trait;
 //use atomic_refcell::AtomicRefCell;
 
-use tesseract::Result;
+use crate::Result;
 
 #[async_trait]
 pub trait Connection {
