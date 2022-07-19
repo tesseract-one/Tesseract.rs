@@ -14,7 +14,12 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
+#![feature(async_closure)]
+
+#[cfg(feature = "client")]
 pub mod client;
+
+#[cfg(feature = "service")]
 pub mod service;
 
 use serde::{Deserialize, Serialize};

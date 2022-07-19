@@ -17,7 +17,6 @@
 #![feature(async_closure)]
 
 mod plt;
-mod polkadot;
 
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -35,25 +34,27 @@ use tesseract::client;
 
 use plt::LocalLink;
 
+use tesseract_protocol_test::Polkadot;
+
 //WALLET PART BEGIN//
 struct TestPolkadotService {}
 
 impl tesseract::service::Service for TestPolkadotService {
-    type Protocol = polkadot::Polkadot;
+    type Protocol = Polkadot;
 
-    fn protocol(&self) -> &polkadot::Polkadot {
-        &polkadot::Polkadot::Network
+    fn protocol(&self) -> &Polkadot {
+        &Polkadot::Network
     }
 
     fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
-        Box::new(crate::polkadot::service::PolkadotExecutor::from_service(
+        Box::new(tesseract_protocol_test::service::PolkadotExecutor::from_service(
             self,
         ))
     }
 }
 
 #[async_trait]
-impl polkadot::service::PolkadotService for TestPolkadotService {
+impl tesseract_protocol_test::service::PolkadotService for TestPolkadotService {
     async fn sign_transaction(self: Arc<Self>, req: String) -> Result<String> {
         if req == "make_error" {
             Err(Error::described(
@@ -99,9 +100,9 @@ fn main() {
     //let client_tesseract = tesseract_client::Tesseract::new(delegate)
     let client_tesseract = client::Tesseract::new(client::delegate::SingleTransportDelegate::arc())
         .transport(plt::client::LocalTransport::new(&link));
-    let client_service = client_tesseract.service(polkadot::Polkadot::Network);
+    let client_service = client_tesseract.service(Polkadot::Network);
 
-    use polkadot::client::PolkadotService;
+    use tesseract_protocol_test::client::PolkadotService;
 
     let signed = Arc::clone(&client_service).sign_transaction("testTransaction");
     let failed = Arc::clone(&client_service).sign_transaction("make_error");

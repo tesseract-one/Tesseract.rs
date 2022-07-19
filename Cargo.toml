@@ -5,4 +5,5 @@
 members = [
     "tesseract",
     "tesseract-playground",
+    "protocols/test"
 ]
