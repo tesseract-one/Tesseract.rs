@@ -16,7 +16,7 @@
 
 use std::sync::Arc;
 
-use tesseract::Protocol;
+use crate::Protocol;
 
 use super::processor::Processor;
 use super::service::Service;

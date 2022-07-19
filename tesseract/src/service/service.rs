@@ -14,7 +14,7 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-use tesseract::Protocol;
+use crate::Protocol;
 
 use super::executor::Executor;
 

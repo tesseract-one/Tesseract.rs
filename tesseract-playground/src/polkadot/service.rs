@@ -21,9 +21,9 @@ use async_trait::async_trait;
 use tesseract::error::Result;
 use tesseract::serialize::Serializer;
 
-use tesseract_service::Executor;
-use tesseract_service::MethodExecutor;
-use tesseract_service::Service;
+use tesseract::service::Executor;
+use tesseract::service::MethodExecutor;
+use tesseract::service::Service;
 
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;

@@ -22,9 +22,9 @@ use async_trait::async_trait;
 use futures::lock::Mutex;
 use serde::de::IgnoredAny;
 
-use tesseract::envelope::RequestEnvelope;
-use tesseract::error::Result;
-use tesseract::serialize::Serializer;
+use crate::envelope::RequestEnvelope;
+use crate::error::Result;
+use crate::serialize::Serializer;
 
 use super::executor::Executor;
 use super::transport::TransportProcessor;

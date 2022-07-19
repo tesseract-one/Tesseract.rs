@@ -23,6 +23,9 @@ pub mod serialize;
 #[cfg(feature = "client")]
 pub mod client;
 
+#[cfg(feature = "service")]
+pub mod service;
+
 pub use error::Error;
 pub use error::ErrorKind;
 pub use error::Result;

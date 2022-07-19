@@ -22,10 +22,10 @@ use futures::future::Future;
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use ::tesseract::envelope::{RequestEnvelope, ResponseEnvelope};
-use ::tesseract::error::Result;
-use ::tesseract::response::Response;
-use ::tesseract::serialize::Serializer;
+use crate::envelope::{RequestEnvelope, ResponseEnvelope};
+use crate::error::Result;
+use crate::response::Response;
+use crate::serialize::Serializer;
 
 #[async_trait]
 pub trait Executor: Send + Sync {

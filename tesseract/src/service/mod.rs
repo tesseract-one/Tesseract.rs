@@ -20,7 +20,7 @@ pub mod service;
 pub mod tesseract;
 pub mod transport;
 
-pub use crate::tesseract::Tesseract;
+pub use tesseract::Tesseract;
 
 pub use executor::Executor;
 pub use executor::MethodExecutor;

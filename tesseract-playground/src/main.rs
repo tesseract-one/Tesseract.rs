@@ -38,14 +38,14 @@ use plt::LocalLink;
 //WALLET PART BEGIN//
 struct TestPolkadotService {}
 
-impl tesseract_service::Service for TestPolkadotService {
+impl tesseract::service::Service for TestPolkadotService {
     type Protocol = polkadot::Polkadot;
 
     fn protocol(&self) -> &polkadot::Polkadot {
         &polkadot::Polkadot::Network
     }
 
-    fn to_executor(self) -> Box<dyn tesseract_service::Executor + Send + Sync> {
+    fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
         Box::new(crate::polkadot::service::PolkadotExecutor::from_service(
             self,
         ))
@@ -88,7 +88,7 @@ fn main() {
     let link = Arc::new(LocalLink::new());
 
     //WALLET PART BEGIN//
-    let _ = tesseract_service::Tesseract::new()
+    let _ = tesseract::service::Tesseract::new()
         .transport(plt::service::ServiceLocalTransport::new(&link))
         .service(TestPolkadotService {});
 

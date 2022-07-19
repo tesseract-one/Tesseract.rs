@@ -16,9 +16,9 @@
 
 use std::sync::Arc;
 
-use tesseract_service::BoundTransport;
-use tesseract_service::Transport;
-use tesseract_service::TransportProcessor;
+use tesseract::service::BoundTransport;
+use tesseract::service::Transport;
+use tesseract::service::TransportProcessor;
 
 use super::link::LocalLink;
 
