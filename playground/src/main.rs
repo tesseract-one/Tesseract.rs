@@ -47,14 +47,14 @@ impl tesseract::service::Service for TestPolkadotService {
     }
 
     fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
-        Box::new(tesseract_protocol_test::service::PolkadotExecutor::from_service(
+        Box::new(tesseract_protocol_test::service::TestExecutor::from_service(
             self,
         ))
     }
 }
 
 #[async_trait]
-impl tesseract_protocol_test::PolkadotService for TestPolkadotService {
+impl tesseract_protocol_test::TestService for TestPolkadotService {
     async fn sign_transaction(self: Arc<Self>, req: &str) -> Result<String> {
         if req == "make_error" {
             Err(Error::described(
@@ -102,7 +102,7 @@ fn main() {
         .transport(plt::client::LocalTransport::new(&link));
     let client_service = client_tesseract.service(Test::Protocol);
 
-    use tesseract_protocol_test::PolkadotService;
+    use tesseract_protocol_test::TestService;
 
     let signed = Arc::clone(&client_service).sign_transaction("testTransaction");
     let failed = Arc::clone(&client_service).sign_transaction("make_error");

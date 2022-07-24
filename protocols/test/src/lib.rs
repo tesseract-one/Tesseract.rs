@@ -53,6 +53,6 @@ pub struct SignTransactionResponse {
 }
 
 #[async_trait]
-pub trait PolkadotService {
+pub trait TestService {
     async fn sign_transaction(self: Arc<Self>, transaction: &str) -> Result<String>;
 }

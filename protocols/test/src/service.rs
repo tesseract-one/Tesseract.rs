@@ -26,13 +26,13 @@ use tesseract::service::Service;
 
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;
-use super::PolkadotService;
+use super::TestService;
 
-pub struct PolkadotExecutor<S: PolkadotService> {
+pub struct TestExecutor<S: TestService> {
     service: Arc<S>,
 }
 
-impl<S: PolkadotService> PolkadotExecutor<S> {
+impl<S: TestService> TestExecutor<S> {
     pub fn from_service(service: S) -> Self {
         Self {
             service: Arc::new(service),
@@ -45,7 +45,7 @@ impl<S: PolkadotService> PolkadotExecutor<S> {
 }
 
 #[async_trait]
-impl<S: PolkadotService> Executor for PolkadotExecutor<S>
+impl<S: TestService> Executor for TestExecutor<S>
 where
     Self: Send + Sync,
     S: Service

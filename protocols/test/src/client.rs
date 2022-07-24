@@ -26,11 +26,11 @@ use tesseract::client::Service;
 use super::Test;
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;
-use super::PolkadotService;
+use super::TestService;
 
 //potentially, such implementations could be done with code generation in the future
 #[async_trait]
-impl<T> PolkadotService for T
+impl<T> TestService for T
 where
     T: Service<Protocol = Test> + ErasedService + ?Sized,
 {
