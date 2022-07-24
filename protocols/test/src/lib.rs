@@ -22,9 +22,13 @@ pub mod client;
 #[cfg(feature = "service")]
 pub mod service;
 
+use std::sync::Arc;
+use async_trait::async_trait;
+
 use serde::{Deserialize, Serialize};
 
 use tesseract::Protocol;
+use tesseract::error::Result;
 
 #[derive(Default)]
 pub enum Test {
@@ -46,4 +50,9 @@ pub struct SignTransactionRequest {
 #[derive(Serialize, Deserialize)]
 pub struct SignTransactionResponse {
     signed: String,
+}
+
+#[async_trait]
+pub trait PolkadotService {
+    async fn sign_transaction(self: Arc<Self>, transaction: &str) -> Result<String>;
 }

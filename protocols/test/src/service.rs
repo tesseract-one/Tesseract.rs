@@ -18,7 +18,6 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 
-use tesseract::error::Result;
 use tesseract::serialize::Serializer;
 
 use tesseract::service::Executor;
@@ -27,11 +26,7 @@ use tesseract::service::Service;
 
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;
-
-#[async_trait]
-pub trait PolkadotService: Service {
-    async fn sign_transaction(self: Arc<Self>, req: String) -> Result<String>;
-}
+use super::PolkadotService;
 
 pub struct PolkadotExecutor<S: PolkadotService> {
     service: Arc<S>,
@@ -53,6 +48,7 @@ impl<S: PolkadotService> PolkadotExecutor<S> {
 impl<S: PolkadotService> Executor for PolkadotExecutor<S>
 where
     Self: Send + Sync,
+    S: Service
 {
     async fn call(self: Arc<Self>, serializer: Serializer, method: &str, data: &[u8]) -> Vec<u8> {
         match method {
@@ -61,7 +57,7 @@ where
                 data,
                 async move |req: SignTransactionRequest| {
                     self.service()
-                        .sign_transaction(req.transaction)
+                        .sign_transaction(&req.transaction)
                         .await
                         .map(|res| SignTransactionResponse { signed: res })
                 },

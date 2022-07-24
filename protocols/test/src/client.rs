@@ -26,12 +26,7 @@ use tesseract::client::Service;
 use super::Test;
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;
-
-#[async_trait]
-pub trait PolkadotService {
-    //test method
-    async fn sign_transaction(self: Arc<Self>, transaction: &str) -> Result<String>;
-}
+use super::PolkadotService;
 
 //potentially, such implementations could be done with code generation in the future
 #[async_trait]

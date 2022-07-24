@@ -54,15 +54,15 @@ impl tesseract::service::Service for TestPolkadotService {
 }
 
 #[async_trait]
-impl tesseract_protocol_test::service::PolkadotService for TestPolkadotService {
-    async fn sign_transaction(self: Arc<Self>, req: String) -> Result<String> {
+impl tesseract_protocol_test::PolkadotService for TestPolkadotService {
+    async fn sign_transaction(self: Arc<Self>, req: &str) -> Result<String> {
         if req == "make_error" {
             Err(Error::described(
                 ErrorKind::Weird,
                 "intentional error for test",
             ))
         } else {
-            Ok(req + "_signed!")
+            Ok(format!("{}_signed!", req))
         }
     }
 }
@@ -102,7 +102,7 @@ fn main() {
         .transport(plt::client::LocalTransport::new(&link));
     let client_service = client_tesseract.service(Test::Protocol);
 
-    use tesseract_protocol_test::client::PolkadotService;
+    use tesseract_protocol_test::PolkadotService;
 
     let signed = Arc::clone(&client_service).sign_transaction("testTransaction");
     let failed = Arc::clone(&client_service).sign_transaction("make_error");
