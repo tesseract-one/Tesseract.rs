@@ -23,7 +23,7 @@ use tesseract::Result;
 use tesseract::client::ErasedService;
 use tesseract::client::Service;
 
-use super::Polkadot;
+use super::Test;
 use super::SignTransactionRequest;
 use super::SignTransactionResponse;
 
@@ -37,7 +37,7 @@ pub trait PolkadotService {
 #[async_trait]
 impl<T> PolkadotService for T
 where
-    T: Service<Protocol = Polkadot> + ErasedService + ?Sized,
+    T: Service<Protocol = Test> + ErasedService + ?Sized,
 {
     async fn sign_transaction(self: Arc<Self>, transaction: &str) -> Result<String> {
         let request = SignTransactionRequest {

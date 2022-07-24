@@ -26,13 +26,15 @@ use serde::{Deserialize, Serialize};
 
 use tesseract::Protocol;
 
-pub enum Polkadot {
-    Network,
+#[derive(Default)]
+pub enum Test {
+    #[default]
+    Protocol,
 }
 
-impl Protocol for Polkadot {
+impl Protocol for Test {
     fn id(&self) -> String {
-        "polkadot".to_owned()
+        "test".to_owned()
     }
 }
 

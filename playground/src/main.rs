@@ -34,16 +34,16 @@ use tesseract::client;
 
 use plt::LocalLink;
 
-use tesseract_protocol_test::Polkadot;
+use tesseract_protocol_test::Test;
 
 //WALLET PART BEGIN//
 struct TestPolkadotService {}
 
 impl tesseract::service::Service for TestPolkadotService {
-    type Protocol = Polkadot;
+    type Protocol = Test;
 
-    fn protocol(&self) -> &Polkadot {
-        &Polkadot::Network
+    fn protocol(&self) -> &Test {
+        &Test::Protocol
     }
 
     fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
@@ -100,7 +100,7 @@ fn main() {
     //let client_tesseract = tesseract_client::Tesseract::new(delegate)
     let client_tesseract = client::Tesseract::new(client::delegate::SingleTransportDelegate::arc())
         .transport(plt::client::LocalTransport::new(&link));
-    let client_service = client_tesseract.service(Polkadot::Network);
+    let client_service = client_tesseract.service(Test::Protocol);
 
     use tesseract_protocol_test::client::PolkadotService;
 
