@@ -13,8 +13,18 @@ license = "Apache-2.0"
 [features]
 client = ["tesseract/client"]
 service = ["tesseract/service"]
+# default = ["client", "service"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 async-trait = { version = "0.1"}
 tesseract = { path = "../../tesseract" }
+
+[dev-dependencies]
+subxt = "0.23.0"
+futures = { version = "0.3", features = ["thread-pool"] }
+
+[[test]]
+name = "subxt_local_test"
+path = "tests/subxt_local_test.rs"
+required-features = ["client", "service"]

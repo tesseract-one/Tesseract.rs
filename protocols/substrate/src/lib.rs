@@ -60,27 +60,27 @@ pub mod method_names {
 
 #[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct GetAccountRequest {
-    account_type: AccountType // Type of a needed account
+    pub account_type: AccountType // Type of a needed account
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct GetAccountResponse {
-    public_key: Vec<u8>, // Public key of the account. 32/33 bytes depending of the AccountType
-    path: String // Derivation path or id of the account.
+    pub public_key: Vec<u8>, // Public key of the account. 32/33 bytes depending of the AccountType
+    pub path: String // Derivation path or id of the account.
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SignTransactionRequest {
-    account_type: AccountType, // Type of the signing account.
-    account_path: String, // Derivation path or id of the signing account returned from the wallet.
-    extrinsic_data: Vec<u8>, // SCALE serialized extrinsic (with Extra)
-    extrinsic_metadata: Vec<u8>, // SCALE serialized extrinsic metadata (Metadata V14)
-    extrinsic_types: Vec<u8> // SCALE serialized PortableRegistry (Metadata V14)
+    pub account_type: AccountType, // Type of the signing account.
+    pub account_path: String, // Derivation path or id of the signing account returned from the wallet.
+    pub extrinsic_data: Vec<u8>, // SCALE serialized extrinsic (with Extra)
+    pub extrinsic_metadata: Vec<u8>, // SCALE serialized extrinsic metadata (Metadata V14)
+    pub extrinsic_types: Vec<u8> // SCALE serialized PortableRegistry (Metadata V14)
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SignTransactionResponse {
-    signature: Vec<u8> // Signature. 64/65 bytes depending of the AccountType
+    pub signature: Vec<u8> // Signature. 64/65 bytes depending of the AccountType
 }
 
 #[async_trait]
