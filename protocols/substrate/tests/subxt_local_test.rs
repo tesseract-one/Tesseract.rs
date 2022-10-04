@@ -21,7 +21,7 @@ use tesseract_protocol_substrate::SubstrateService;
 use tesseract_protocol_substrate::{AccountType, GetAccountResponse};
 
 type Config = subxt::PolkadotConfig;
-const WALLET_PHRASE: &str = "blah blah blah";
+const WALLET_PHRASE: &str = "arch flush fabric dentist fade service chronic bacon plunge expand still uncover";
 const SMART_CONTRACT: &str = "5E5UJJ91pVa82RXnteAQV8ERMxZy5wW6fS2MpmRF3GXNpdjE";
 
 struct WalletSubstrateService {
