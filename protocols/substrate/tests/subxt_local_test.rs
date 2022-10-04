@@ -9,6 +9,8 @@ extern crate futures;
 
 use async_trait::async_trait;
 use futures::TryFutureExt;
+use rand::distributions::{Alphanumeric, DistString};
+use rand::thread_rng;
 use subxt::ext::{sp_core::Pair, sp_runtime::traits::IdentifyAccount};
 use subxt::tx::Signer;
 
@@ -144,7 +146,9 @@ async fn run_test(client: Arc<dyn tesseract::client::Service<Protocol = tesserac
   let dapp = dapp::DApp::new(SMART_CONTRACT.to_owned())
     .map_err(|err| Error::nested(err)).await?;
 
-  dapp.add("subxt test message".to_owned(), signer).await
+  let random = Alphanumeric.sample_string(&mut thread_rng(), 4);
+  let text = format!("substrate protocol test message {}", random);
+  dapp.add(text, signer).await
     .map_err(|e| tesseract::Error::nested(e))?;
 
   Ok(())
