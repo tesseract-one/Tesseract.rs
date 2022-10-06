@@ -9,9 +9,11 @@ use sp_core::{
     bytes::{from_hex, to_hex},
     crypto::AccountId32,
     serde::{Deserialize, Serialize},
+    Decode,
 };
 use subxt::{
     dynamic::{tx, Value},
+    events::StaticEvent,
     ext::{
         scale_value::Composite,
         sp_runtime::scale_info::{MetaType, Registry},
@@ -43,6 +45,14 @@ struct ContractCallRequest {
     value: u128,
     gasLimit: u64,
     inputData: String,
+}
+
+#[derive(Decode)]
+struct AddEvent {}
+
+impl StaticEvent for AddEvent {
+    const PALLET: &'static str = "Contracts";
+    const EVENT: &'static str = "Called";
 }
 
 pub struct DApp {
@@ -84,7 +94,7 @@ impl DApp {
         OnlineClient::from_rpc_client(client).await
     }
 
-    pub async fn add<S>(&self, text: String, signer: S) -> Result<String, Box<dyn Error + Send + Sync>>
+    pub async fn add<S>(&self, text: String, signer: S) -> Result<(), Box<dyn Error + Send + Sync>>
     where
         S: Signer<PolkadotConfig> + Send + Sync,
     {
@@ -98,11 +108,22 @@ impl DApp {
             Value::from_bytes(buf),
         ];
         let tx = tx("Contracts", "call", fields);
-        let hash = self.api.tx().sign_and_submit_default(&tx, &signer).await?;
-        Ok(to_hex(&hash.0, false))
+        self.api
+            .tx()
+            .sign_and_submit_then_watch_default(&tx, &signer)
+            .await?
+            .wait_for_finalized_success()
+            .await?
+            .find_first::<AddEvent>()?
+            .ok_or("No event")?;
+        Ok(())
     }
 
-    pub async fn get(&self, from: u32, to: u32) -> Result<Vec<String>, Box<dyn Error>> {
+    pub async fn get(
+        &self,
+        from: u32,
+        to: u32,
+    ) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
         let origin = AccountId32::from_str("5HCHVhJusMdpH7SRLX3NGvdxy7hPE8cAjEnyrHDChLwmAVSR")?;
         let mut buf = from_hex("0x2f865bd9")?;
         encode_as_type(&Value::u128(from.try_into()?), 0, &self.types, &mut buf)?;
@@ -128,7 +149,7 @@ impl DApp {
         Ok(from_value(value)?)
     }
 
-    pub async fn len(&self) -> Result<u32, Box<dyn Error>> {
+    pub async fn len(&self) -> Result<u32, Box<dyn Error + Send + Sync>> {
         let origin = AccountId32::from_str("5HCHVhJusMdpH7SRLX3NGvdxy7hPE8cAjEnyrHDChLwmAVSR")?;
         let call_request = to_value(ContractCallRequest {
             origin,
