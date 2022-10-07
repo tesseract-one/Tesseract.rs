@@ -64,26 +64,35 @@ impl<D: Delegate + Sync + Send> Tesseract<D> {
 }
 
 impl<D: Delegate + Send + Sync + 'static> Tesseract<D> {
-    pub fn service<P: Protocol + Sync + Send>(&self, r#for: P) -> Arc<impl Service<Protocol = P>> {
+    pub fn service<P: Protocol + Copy + 'static>(&self, r#for: P) -> Arc<impl Service<Protocol = P>> {
+        let service_connection = self.conn_service(r#for);
+
         Arc::new(ServiceImpl::new(
             r#for,
             self.serializer,
-            self.conn_service(),
+            service_connection,
         ))
     }
 
-    fn conn_stream(
-        &self,
+    fn conn_stream<P: Protocol + Copy + 'static>(
+        &self, protocol: P
     ) -> impl Stream<Item = Result<Box<dyn Connection + Sync + Send>>> + Sync + Send {
         let transports: Vec<_> = self.transports.iter().map(|t| Arc::clone(t)).collect();
 
         let delegate = Arc::clone(&self.delegate);
+
+        let protocol1: Arc<dyn Protocol> = Arc::new(protocol);
+        let p2: Arc<dyn Protocol> = Arc::clone(&protocol1);
+
         stream::unfold(
             (delegate, transports),
-            |(delegate, transports)| async move {
-                let statuses = future::join_all(transports.iter().map(|t| {
+            move |(delegate, transports)| async move {
+                let statuses = future::join_all(transports.iter().map(move |t| {
                     let id = t.id();
-                    Arc::clone(t).status_plus_sync().map(|check| (id, check))
+                    
+                    let pboxed = Box::new(protocol);
+
+                    Arc::clone(t).status_plus_sync(pboxed).map(|check| (id, check))
                 }));
                 let statuses = statuses.await.into_iter().collect::<HashMap<_, _>>();
 
@@ -105,11 +114,11 @@ impl<D: Delegate + Send + Sync + 'static> Tesseract<D> {
         )
     }
 
-    pub fn conn_chached(&self) -> impl Connection {
-        CachedConnection::new(self.conn_stream())
+    pub fn conn_chached<P: Protocol + Copy + 'static>(&self, protocol: P) -> impl Connection {
+        CachedConnection::new(self.conn_stream(protocol))
     }
 
-    pub fn conn_service(&self) -> impl ServiceConnection {
-        QueuedConnection::new(self.conn_chached())
+    pub fn conn_service<P: Protocol + Copy + 'static>(&self, protocol: P) -> impl ServiceConnection {
+        QueuedConnection::new(self.conn_chached(protocol))
     }
 }

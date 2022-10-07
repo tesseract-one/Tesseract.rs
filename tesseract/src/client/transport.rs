@@ -21,6 +21,8 @@ use async_trait::async_trait;
 use futures::Future;
 use futures::FutureExt;
 
+use crate::Protocol;
+
 use super::connection::Connection;
 
 pub enum Status {
@@ -32,19 +34,19 @@ pub enum Status {
 #[async_trait]
 pub trait Transport {
     fn id(&self) -> String;
-    async fn status(self: Arc<Self>) -> Status;
+    async fn status(self: Arc<Self>, protocol: Box<dyn Protocol>) -> Status;
 
     fn connect(&self) -> Box<dyn Connection + Sync + Send>;
 }
 
 impl dyn Transport + Send + Sync + 'static {
     pub fn status_plus_sync<'a>(
-        self: Arc<Self>,
+        self: Arc<Self>, protocol: Box<dyn Protocol>,
     ) -> Pin<Box<dyn Future<Output = Status> + Send + Sync + 'a>>
     where
         Self: 'a,
     {
-        let result = self.status();
+        let result = self.status(protocol);
         let boxed = result.boxed();
         //ugly cast, because of limitations of async in Traits. Can be fixed by a PR to async_trait crate allowing to add Sync marker to the futures
         unsafe {
