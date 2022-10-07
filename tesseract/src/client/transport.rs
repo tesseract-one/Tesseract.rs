@@ -36,7 +36,7 @@ pub trait Transport {
     fn id(&self) -> String;
     async fn status(self: Arc<Self>, protocol: Box<dyn Protocol>) -> Status;
 
-    fn connect(&self) -> Box<dyn Connection + Sync + Send>;
+    fn connect(&self, protocol: Box<dyn Protocol>) -> Box<dyn Connection + Sync + Send>;
 }
 
 impl dyn Transport + Send + Sync + 'static {

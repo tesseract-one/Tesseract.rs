@@ -91,7 +91,7 @@ impl Transport for LocalTransport {
         }
     }
 
-    fn connect(&self) -> Box<dyn Connection + Sync + Send> {
+    fn connect(&self, _: Box<dyn Protocol>) -> Box<dyn Connection + Sync + Send> {
         Box::new(ClientLocalConnection::new(&self.link))
     }
 }

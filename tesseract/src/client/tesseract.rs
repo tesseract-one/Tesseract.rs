@@ -81,9 +81,6 @@ impl<D: Delegate + Send + Sync + 'static> Tesseract<D> {
 
         let delegate = Arc::clone(&self.delegate);
 
-        let protocol1: Arc<dyn Protocol> = Arc::new(protocol);
-        let p2: Arc<dyn Protocol> = Arc::clone(&protocol1);
-
         stream::unfold(
             (delegate, transports),
             move |(delegate, transports)| async move {
@@ -103,7 +100,8 @@ impl<D: Delegate + Send + Sync + 'static> Tesseract<D> {
                             transports.iter().map(|t| (t.id(), t)).collect();
 
                         let connection = match transports_map.get(&transport_id) {
-                            Some(transport) => transport.connect(),
+                            Some(transport) =>
+                                transport.connect(Box::new(protocol)),
                             None => panic!("Unable to find transport: {}", transport_id),
                         };
 
