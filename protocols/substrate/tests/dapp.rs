@@ -124,13 +124,12 @@ impl DApp {
         from: u32,
         to: u32,
     ) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
-        let origin = AccountId32::from_str("5HCHVhJusMdpH7SRLX3NGvdxy7hPE8cAjEnyrHDChLwmAVSR")?;
         let mut buf = from_hex("0x2f865bd9")?;
         encode_as_type(&Value::u128(from.try_into()?), 0, &self.types, &mut buf)?;
         encode_as_type(&Value::u128(to.try_into()?), 0, &self.types, &mut buf)?;
         let input_data = to_hex(&buf, false);
         let call_request = to_value(ContractCallRequest {
-            origin,
+            origin: self.contract.clone(),
             dest: self.contract.clone(),
             value: 0,
             gasLimit: 9_375_000_000,
@@ -150,9 +149,8 @@ impl DApp {
     }
 
     pub async fn len(&self) -> Result<u32, Box<dyn Error + Send + Sync>> {
-        let origin = AccountId32::from_str("5HCHVhJusMdpH7SRLX3NGvdxy7hPE8cAjEnyrHDChLwmAVSR")?;
         let call_request = to_value(ContractCallRequest {
-            origin,
+            origin: self.contract.clone(),
             dest: self.contract.clone(),
             value: 0,
             gasLimit: 9_375_000_000,
