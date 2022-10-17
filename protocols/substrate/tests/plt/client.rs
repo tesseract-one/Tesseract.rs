@@ -23,6 +23,7 @@ use futures::lock::Mutex;
 
 use tesseract::Error;
 use tesseract::ErrorKind;
+use tesseract::Protocol;
 use tesseract::Result;
 
 use tesseract::client::transport::Status;
@@ -82,7 +83,7 @@ impl Transport for LocalTransport {
         PLT.to_owned()
     }
 
-    async fn status(self: Arc<Self>) -> Status {
+    async fn status(self: Arc<Self>, _: Box<dyn Protocol>) -> Status {
         if self.link.ready() {
             Status::Ready
         } else {
@@ -90,7 +91,7 @@ impl Transport for LocalTransport {
         }
     }
 
-    fn connect(&self) -> Box<dyn Connection + Sync + Send> {
+    fn connect(&self, _: Box<dyn Protocol>) -> Box<dyn Connection + Sync + Send> {
         Box::new(ClientLocalConnection::new(&self.link))
     }
 }

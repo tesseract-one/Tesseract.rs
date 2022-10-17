@@ -30,7 +30,7 @@ use serde::{Deserialize, Serialize};
 use tesseract::Protocol;
 use tesseract::error::Result;
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub enum Test {
     #[default]
     Protocol,
