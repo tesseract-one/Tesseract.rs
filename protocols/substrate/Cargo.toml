@@ -23,6 +23,12 @@ tesseract = { path = "../../tesseract" }
 [dev-dependencies]
 subxt = "0.23.0"
 futures = { version = "0.3", features = ["thread-pool"] }
+sp-core = "6.0.0"
+scale-value = "0.5.0"
+parity-scale-codec = "3.2.1"
+jsonrpsee-core = "0.15.1"
+tokio = { version = "1.20.1", features = ["rt-multi-thread"] }
+rand = "0.8.5"
 
 [[test]]
 name = "subxt_local_test"

@@ -9,6 +9,8 @@ extern crate futures;
 
 use async_trait::async_trait;
 use futures::TryFutureExt;
+use rand::distributions::{Alphanumeric, DistString};
+use rand::thread_rng;
 use subxt::ext::{sp_core::Pair, sp_runtime::traits::IdentifyAccount};
 use subxt::tx::Signer;
 
@@ -19,7 +21,7 @@ use tesseract_protocol_substrate::SubstrateService;
 use tesseract_protocol_substrate::{AccountType, GetAccountResponse};
 
 type Config = subxt::PolkadotConfig;
-const WALLET_PHRASE: &str = "blah blah blah";
+const WALLET_PHRASE: &str = "arch flush fabric dentist fade service chronic bacon plunge expand still uncover";
 const SMART_CONTRACT: &str = "5E5UJJ91pVa82RXnteAQV8ERMxZy5wW6fS2MpmRF3GXNpdjE";
 
 struct WalletSubstrateService {
@@ -80,7 +82,7 @@ impl SubstrateService for WalletSubstrateService {
 
     let signature = self.signer.sign(extrinsic_data);
     match signature {
-      subxt::ext::sp_runtime::MultiSignature::Ed25519(signature) => {
+      subxt::ext::sp_runtime::MultiSignature::Sr25519(signature) => {
         let bytes: &[u8] = signature.as_ref();
         Ok(bytes.to_owned())
       },
@@ -95,8 +97,8 @@ struct SubstrateSigner {
   account_id: subxt::ext::sp_runtime::AccountId32
 }
 
-impl<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Substrate>> SubstrateSigner<S> {
-  fn new(client: &Arc<S>, path: &str, pub_key: &[u8]) -> Self {
+impl SubstrateSigner {
+  fn new(client: &Arc<dyn tesseract::client::Service<Protocol = tesseract_protocol_substrate::Substrate>>, path: &str, pub_key: &[u8]) -> Self {
     let pk: subxt::ext::sp_core::sr25519::Public = pub_key.try_into().unwrap();
     let public: subxt::ext::sp_runtime::MultiSigner = pk.into();
     let account_id = public.clone().into_account();
@@ -105,7 +107,7 @@ impl<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Subs
 }
 
 
-impl<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Substrate>> subxt::tx::Signer<Config> for SubstrateSigner<S> {
+impl subxt::tx::Signer<Config> for SubstrateSigner {
   /// Optionally returns a nonce.
   fn nonce(&self) -> Option<<Config as subxt::Config>::Index> {
     None
@@ -126,7 +128,6 @@ impl<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Subs
   /// Some signers may fail, for instance because the hardware on which the keys are located has
   /// refused the operation.
   fn sign(&self, signer_payload: &[u8]) -> <Config as subxt::Config>::Signature {
-    <Config as subxt::Config>::Extrinsic
     let signed_future = Arc::clone(&self.client).sign_transaction(
       AccountType::Sr25519, &self.path,
       signer_payload, &[], &[]
@@ -138,23 +139,29 @@ impl<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Subs
   }
 }
 
-async fn run_test<S: tesseract::client::Service<Protocol = tesseract_protocol_substrate::Substrate>>(client: Arc<S>) -> Result<()> {
-  let subxt = subxt::OnlineClient::<Config>::from_url("https://blah")
-    .map_err(|err| Error::nested(Box::new(err))).await?;
-  
+async fn run_test(client: Arc<dyn tesseract::client::Service<Protocol = tesseract_protocol_substrate::Substrate>>) -> Result<()> {
   let account = Arc::clone(&client).get_account(AccountType::Sr25519).await?;
   let signer = SubstrateSigner::new(&client, &account.path, &account.public_key);
 
   let dapp = dapp::DApp::new(SMART_CONTRACT.to_owned())
     .map_err(|err| Error::nested(err)).await?;
 
-  dapp.add("subxt test message".to_owned(), signer).await?;
+  let random = Alphanumeric.sample_string(&mut thread_rng(), 4);
+  let text = format!("substrate protocol test message {}", random);
+  let text_cloned = text.clone();
+  dapp.add(text, signer).await
+    .map_err(|e| tesseract::Error::nested(e))?;
+  let len = dapp.len().await
+    .map_err(|e| tesseract::Error::nested(e))?;
+  let texts = dapp.get(len.checked_sub(20).or(Some(0)).unwrap(), len).await
+    .map_err(|e| tesseract::Error::nested(e))?;
+  assert!(texts.contains(&text_cloned));
 
   Ok(())
 }
 
-#[test]
-fn test_subxt_local() {
+#[tokio::test]
+async fn test_subxt_local() -> Result<()> {
   let link = Arc::new(plt::LocalLink::new());
 
   let (pair, _) = subxt::ext::sp_core::sr25519::Pair::from_phrase(WALLET_PHRASE, None).unwrap();
@@ -166,5 +173,5 @@ fn test_subxt_local() {
   let client_tesseract = tesseract::client::Tesseract::new(tesseract::client::delegate::SingleTransportDelegate::arc())
         .transport(plt::client::LocalTransport::new(&link));
   let client = client_tesseract.service(tesseract_protocol_substrate::Substrate::Protocol);
-  futures::executor::block_on(run_test(client)).unwrap();
+  run_test(client).await
 }
