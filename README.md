@@ -91,7 +91,9 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* [x] transports API (to create ways to communicate between dApps and Wallets, i.e. TCP/IP, IPC, etc.)
 	* [x] protocols API (APIs to implement blockchain networks - i.e. Polkadot, Bitcoin, Ethereum, etc.)
 	
-* [x] v0.1.1 - added Playground that implements mocks and tests all the frameworks concepts
+* [x] v0.1.1 - Playground that implements mocks and tests all the frameworks concepts
+* [x] v0.1.2 - restructured repo to provide **client** and **service** as features
+* [x] v0.1.3 - **Test** protocol implementation (for testing the connection)
 
 * [x] v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
 	* [x] Android support
@@ -125,6 +127,10 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 * v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
 	* Android support
 	* iOS support
+
+* v0.1.3 - added **Test** protocol implementation (for testing the connection)
+
+* v0.1.2 - restructured repo to provide **client** and **service** as features
 
 * v0.1.1 - added Playground that implements mocks and tests all the frameworks concepts
 
