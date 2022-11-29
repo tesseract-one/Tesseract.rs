@@ -9,6 +9,11 @@
 
 #### Tesseract aims to improve the usability of the dApps without compromising security or decentralization.
 
+This page is about **Tesseract shared Core** in Rust and **Tesseract Rust APIs**. If you need general info or Tesseract for a specific platform, please consider one of the following:
+* [General info](https://github.com/tesseract-one/)
+* [Tesseract for iOS](https://github.com/tesseract-one/Tesseract.swift)
+* [Tesseract for Android](https://github.com/tesseract-one/Tesseract.android)
+
 ## Getting started
 
 First, make sure, please, you have followed the [installation](#installation) section steps. Here we describe how to start using Tesseract in your dApp. To make your wallet Tesseract-compatible, please refer to the [Wallet Documentation](./tesseract-service/README.MD) section.
@@ -79,25 +84,36 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 
 ## Roadmap
 
-* v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
-	* Android support
-	* iOS support
+* [x] v0.1 - framework in Rust that implements all the concepts of Tesseract Protocol
+	* [x] framework itself
+	* [x] client API (for dApp develpers)
+	* [x] service API (for Wallet developers)
+	* [x] transports API (to create ways to communicate between dApps and Wallets, i.e. TCP/IP, IPC, etc.)
+	* [x] protocols API (APIs to implement blockchain networks - i.e. Polkadot, Bitcoin, Ethereum, etc.)
+	
+* [x] v0.1.1 - added Playground that implements mocks and tests all the frameworks concepts
 
-* v0.3 - Polkadot network support
+* [x] v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
+	* [x] Android support
+	* [x] iOS support
 
-* v0.4 - demo applications
+* [ ] v0.3 - Polkadot network support
+	* [x] in a separate branch
+	* [ ] merged
+
+* [ ] v0.4 - demo applications
 	* Android Wallet
 	* Androif dApp
 	* iOS Wallet
 	* iOS dApps
 
-* v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
-	* Swift
-	* Kotlin/Java
+* [ ] v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
+	* [ ] Swift
+	* [ ] Kotlin/Java
 
-* v1.0 - first stable release
+* [ ] v1.0 - first stable release
 
-* v1.0+ - more transports and more blockchain networks
+* [ ] v1.0+ - more transports and more blockchain networks
 	* browser dApps
 	* desktop dApps
 	* various transports
@@ -105,6 +121,10 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* more native language libraries (i.e. JS)
 
 ## Changelog
+
+* v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
+	* Android support
+	* iOS support
 
 * v0.1.1 - added Playground that implements mocks and tests all the frameworks concepts
 
