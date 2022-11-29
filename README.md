@@ -5,7 +5,7 @@
 </p>
 
 
-### [Tesseract](https://tesseract.one/) is a protocol that allows connecting dApps and wallets seamlessly, regardless of the blockchain protocol, type of the wallet, or the dApp.
+### [Tesseract](https://tesseract.one/) seamlessly integrates dApps and wallets, regardless of the blockchain protocol.
 
 #### Tesseract aims to improve the usability of the dApps without compromising security or decentralization.
 
