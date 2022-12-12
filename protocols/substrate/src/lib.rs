@@ -74,8 +74,8 @@ pub struct SignTransactionRequest {
     pub account_type: AccountType, // Type of the signing account.
     pub account_path: String, // Derivation path or id of the signing account returned from the wallet.
     pub extrinsic_data: Vec<u8>, // SCALE serialized extrinsic (with Extra)
-    pub extrinsic_metadata: Vec<u8>, // SCALE serialized extrinsic metadata (Metadata V14)
-    pub extrinsic_types: Vec<u8> // SCALE serialized PortableRegistry (Metadata V14)
+    pub extrinsic_metadata: Vec<u8>, // SCALE serialized extrinsic metadata (Metadata V14) with type set to call type.
+    pub extrinsic_types: Vec<u8> // SCALE serialized PortableRegistry with all used types (Metadata V14)
 }
 
 #[derive(Serialize, Deserialize, Clone)]
