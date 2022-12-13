@@ -82,11 +82,11 @@ impl DApp {
         ))
     }
 
-    pub async fn add(&self, text: String) -> Result<(), Box<dyn Error + Send + Sync>> {
+    pub async fn add(&self, text: &str) -> Result<(), Box<dyn Error + Send + Sync>> {
         let mut call = ContractCallCall::<<PolkadotConfig as Config>::Address>::new_call(
             self.contract.clone().into(),
             0,
-            Weight::from_proof_size(9_375_000_000),
+            Weight::from_ref_time(9_375_000_000),
             None,
             contract::calls::ADD,
         );
@@ -113,7 +113,7 @@ impl DApp {
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            Weight::from_proof_size(9_375_000_000),
+            Weight::from_ref_time(9_375_000_000),
             None,
             contract::calls::GET,
         );
@@ -135,7 +135,7 @@ impl DApp {
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            Weight::from_proof_size(9_375_000_000),
+            Weight::from_ref_time(9_375_000_000),
             None,
             contract::calls::LEN,
         );
