@@ -1,4 +1,4 @@
-//===------------ mod.rs --------------------------------------------===//
+//===------------------- lib.rs --------------------------------------------===//
 //  Copyright 2021, Tesseract Systems, Inc.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,21 +22,23 @@ pub mod client;
 #[cfg(feature = "service")]
 pub mod service;
 
-use std::sync::Arc;
 use async_trait::async_trait;
+use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 
-use tesseract::Protocol;
 use tesseract::error::Result;
+use tesseract::Protocol;
 
 #[derive(Clone, Copy)]
 pub enum Substrate {
-    Protocol
+    Protocol,
 }
 
 impl Default for Substrate {
-  fn default() -> Self { Self::Protocol }
+    fn default() -> Self {
+        Self::Protocol
+    }
 }
 
 impl Protocol for Substrate {
@@ -50,7 +52,7 @@ impl Protocol for Substrate {
 pub enum AccountType {
     Ed25519 = 1,
     Sr25519 = 2,
-    Ecdsa = 3
+    Ecdsa = 3,
 }
 
 pub mod method_names {
@@ -60,36 +62,38 @@ pub mod method_names {
 
 #[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct GetAccountRequest {
-    pub account_type: AccountType // Type of a needed account
+    pub account_type: AccountType, // Type of a needed account
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct GetAccountResponse {
     pub public_key: Vec<u8>, // Public key of the account. 32/33 bytes depending of the AccountType
-    pub path: String // Derivation path or id of the account.
+    pub path: String,        // Derivation path or id of the account.
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SignTransactionRequest {
-    pub account_type: AccountType, // Type of the signing account.
+    pub account_type: AccountType,   // Type of the signing account.
     pub account_path: String, // Derivation path or id of the signing account returned from the wallet.
     pub extrinsic_data: Vec<u8>, // SCALE serialized extrinsic (with Extra)
     pub extrinsic_metadata: Vec<u8>, // SCALE serialized extrinsic metadata (Metadata V14) with type set to call type.
-    pub extrinsic_types: Vec<u8> // SCALE serialized PortableRegistry with all used types (Metadata V14)
+    pub extrinsic_types: Vec<u8>, // SCALE serialized PortableRegistry with all used types (Metadata V14)
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SignTransactionResponse {
-    pub signature: Vec<u8> // Signature. 64/65 bytes depending of the AccountType
+    pub signature: Vec<u8>, // Signature. 64/65 bytes depending of the AccountType
 }
 
 #[async_trait]
 pub trait SubstrateService {
     async fn get_account(self: Arc<Self>, account_type: AccountType) -> Result<GetAccountResponse>;
-    async fn sign_transaction(self: Arc<Self>, 
-                              account_type: AccountType,
-                              account_path: &str,
-                              extrinsic_data: &[u8],
-                              extrinsic_metadata: &[u8],
-                              extrinsic_types: &[u8]) -> Result<Vec<u8>>;
+    async fn sign_transaction(
+        self: Arc<Self>,
+        account_type: AccountType,
+        account_path: &str,
+        extrinsic_data: &[u8],
+        extrinsic_metadata: &[u8],
+        extrinsic_types: &[u8],
+    ) -> Result<Vec<u8>>;
 }

@@ -1,4 +1,4 @@
-//===------------ mod.rs --------------------------------------------===//
+//===------------------ mod.rs --------------------------------------------===//
 //  Copyright 2021, Tesseract Systems, Inc.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,5 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-pub mod client;
-mod link;
-pub mod service;
-
-pub use link::LocalLink;
-
-pub const PLT: &str = "plt";
+#[cfg(feature = "transport-plt")]
+pub mod plt;

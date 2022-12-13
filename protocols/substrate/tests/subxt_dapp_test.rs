@@ -1,9 +1,24 @@
+//===------------ subxt_dapp_test.rs --------------------------------------===//
+//  Copyright 2021, Tesseract Systems, Inc.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//===----------------------------------------------------------------------===//
+
 mod dapp;
-mod plt;
 mod wallet;
 
 extern crate async_trait;
-extern crate pollster;
+extern crate futures;
 extern crate rand;
 extern crate subxt;
 extern crate tesseract;
@@ -47,16 +62,19 @@ async fn run_test(
 
 #[tokio::test]
 async fn test_dapp_local() {
-    let link = Arc::new(plt::LocalLink::new());
+    let link = Arc::new(tesseract::transports::plt::LocalLink::new());
 
     let (pair, _) = sr25519::Pair::from_phrase(WALLET_PHRASE, None).unwrap();
     let substrate_service = WalletService::new(pair);
     let _ = service::Tesseract::new()
-        .transport(plt::service::LocalTransport::new(&link))
+        .transport(tesseract::transports::plt::service::LocalTransport::new(
+            &link,
+        ))
         .service(substrate_service);
 
-    let client_tesseract = client::Tesseract::new(SingleTransportDelegate::arc())
-        .transport(plt::client::LocalTransport::new(&link));
+    let client_tesseract = client::Tesseract::new(SingleTransportDelegate::arc()).transport(
+        tesseract::transports::plt::client::LocalTransport::new(&link),
+    );
     let client = client_tesseract.service(Substrate::Protocol);
 
     run_test(client).await.unwrap()

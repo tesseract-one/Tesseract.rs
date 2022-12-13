@@ -16,8 +16,6 @@
 
 #![feature(async_closure)]
 
-mod plt;
-
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -32,7 +30,7 @@ use tesseract::Result;
 
 use tesseract::client;
 
-use plt::LocalLink;
+use tesseract::transports::plt::LocalLink;
 
 use tesseract_protocol_test::Test;
 
@@ -47,9 +45,7 @@ impl tesseract::service::Service for TestPolkadotService {
     }
 
     fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
-        Box::new(tesseract_protocol_test::service::TestExecutor::from_service(
-            self,
-        ))
+        Box::new(tesseract_protocol_test::service::TestExecutor::from_service(self))
     }
 }
 
@@ -90,7 +86,9 @@ fn main() {
 
     //WALLET PART BEGIN//
     let _ = tesseract::service::Tesseract::new()
-        .transport(plt::service::ServiceLocalTransport::new(&link))
+        .transport(tesseract::transports::plt::service::LocalTransport::new(
+            &link,
+        ))
         .service(TestPolkadotService {});
 
     //WALLET PART END//
@@ -99,7 +97,9 @@ fn main() {
     //let delegate = Arc::new(ClientDelegate {});
     //let client_tesseract = tesseract_client::Tesseract::new(delegate)
     let client_tesseract = client::Tesseract::new(client::delegate::SingleTransportDelegate::arc())
-        .transport(plt::client::LocalTransport::new(&link));
+        .transport(tesseract::transports::plt::client::LocalTransport::new(
+            &link,
+        ));
     let client_service = client_tesseract.service(Test::Protocol);
 
     use tesseract_protocol_test::TestService;

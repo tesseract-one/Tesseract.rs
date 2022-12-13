@@ -21,14 +21,14 @@ use async_trait::async_trait;
 
 use futures::lock::Mutex;
 
-use tesseract::Error;
-use tesseract::ErrorKind;
-use tesseract::Protocol;
-use tesseract::Result;
+use crate::Error;
+use crate::ErrorKind;
+use crate::Protocol;
+use crate::Result;
 
-use tesseract::client::transport::Status;
-use tesseract::client::Connection;
-use tesseract::client::Transport;
+use crate::client::transport::Status;
+use crate::client::Connection;
+use crate::client::Transport;
 
 use super::link::LocalLink;
 use super::PLT;

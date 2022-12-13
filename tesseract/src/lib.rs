@@ -26,6 +26,9 @@ pub mod client;
 #[cfg(feature = "service")]
 pub mod service;
 
+#[cfg(feature = "transports")]
+pub mod transports;
+
 pub use error::Error;
 pub use error::ErrorKind;
 pub use error::Result;

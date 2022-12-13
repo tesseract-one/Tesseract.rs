@@ -1,4 +1,20 @@
-use pollster::FutureExt as _;
+//===-------------- signer.rs --------------------------------------------===//
+//  Copyright 2021, Tesseract Systems, Inc.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//===----------------------------------------------------------------------===//
+
+use futures::executor;
 use std::sync::Arc;
 use subxt::ext::codec::Encode;
 use subxt::ext::frame_metadata::v14::ExtrinsicMetadata;
@@ -84,7 +100,7 @@ impl Signer<subxt::PolkadotConfig> for SubstrateSigner {
             &extrinsic_types,
         );
 
-        let result = signed_future.block_on().unwrap();
+        let result = executor::block_on(signed_future).unwrap();
         let bytes: &[u8] = result.as_ref();
         let signature: sr25519::Signature = bytes.try_into().unwrap();
         signature.into()
