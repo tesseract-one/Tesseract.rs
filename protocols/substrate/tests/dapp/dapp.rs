@@ -32,6 +32,7 @@ use super::signer::SubstrateSigner;
 
 mod contract {
     use super::Decode;
+    use super::Weight;
     use subxt::events::StaticEvent;
 
     #[derive(Decode)]
@@ -47,6 +48,8 @@ mod contract {
         pub const GET: &'static str = "0x2f865bd9";
         pub const LEN: &'static str = "0x839b3548";
     }
+
+    pub const GAS_LIMIT: Weight = Weight::from_parts(9_375_000_000, 524288);
 }
 
 pub struct DApp {
@@ -100,7 +103,7 @@ impl DApp {
         let mut call = ContractCallCall::<<PolkadotConfig as Config>::Address>::new_call(
             self.contract.clone().into(),
             0,
-            Weight::from_parts(100_000_000_000, 0),
+            contract::GAS_LIMIT,
             None,
             contract::calls::ADD,
         );
@@ -127,7 +130,7 @@ impl DApp {
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            Weight::from_ref_time(9_375_000_000),
+            contract::GAS_LIMIT,
             None,
             contract::calls::GET,
         );
@@ -149,7 +152,7 @@ impl DApp {
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            Weight::from_ref_time(9_375_000_000),
+            contract::GAS_LIMIT,
             None,
             contract::calls::LEN,
         );
