@@ -78,25 +78,24 @@ impl DApp {
     async fn get_signer(
         &self,
     ) -> Result<impl Signer<PolkadotConfig>, Box<dyn Error + Send + Sync>> {
-        let mut account = self.account.lock().await;
-        match account.as_ref() {
-            Some(acc) => Ok(SubstrateSigner::new(
-                &self.tesseract,
-                acc.clone(),
-                self.api.metadata(),
-            )),
-            None => {
-                let response = Arc::clone(&self.tesseract)
-                    .get_account(AccountType::Sr25519)
-                    .await?;
-                *account = Some(response.clone());
-                Ok(SubstrateSigner::new(
-                    &self.tesseract,
-                    response,
-                    self.api.metadata(),
-                ))
+        let account = {
+            let mut account = self.account.lock().await;
+            match account.as_ref() {
+                Some(acc) => acc.clone(),
+                None => {
+                    let response = Arc::clone(&self.tesseract)
+                        .get_account(AccountType::Sr25519)
+                        .await?;
+                    *account = Some(response.clone());
+                    response
+                }
             }
-        }
+        };
+        Ok(SubstrateSigner::new(
+            &self.tesseract,
+            account,
+            self.api.metadata(),
+        ))
     }
 
     pub async fn add(&self, text: &str) -> Result<(), Box<dyn Error + Send + Sync>> {
