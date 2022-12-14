@@ -14,6 +14,7 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
+use futures::lock::Mutex;
 use sp_weights::Weight;
 use std::error::Error;
 use std::str::FromStr;
@@ -24,7 +25,7 @@ use subxt::{
 };
 
 use tesseract::client::Service;
-use tesseract_protocol_substrate::{AccountType, Substrate, SubstrateService};
+use tesseract_protocol_substrate::{AccountType, GetAccountResponse, Substrate, SubstrateService};
 
 use super::call::*;
 use super::signer::SubstrateSigner;
@@ -52,6 +53,7 @@ pub struct DApp {
     api: OnlineClient<PolkadotConfig>,
     contract: AccountId32,
     tesseract: Arc<dyn Service<Protocol = Substrate>>,
+    account: Mutex<Option<GetAccountResponse>>,
 }
 
 impl DApp {
@@ -66,27 +68,39 @@ impl DApp {
             api,
             contract,
             tesseract,
+            account: Mutex::new(None),
         })
     }
 
     async fn get_signer(
         &self,
     ) -> Result<impl Signer<PolkadotConfig>, Box<dyn Error + Send + Sync>> {
-        let response = Arc::clone(&self.tesseract)
-            .get_account(AccountType::Sr25519)
-            .await?;
-        Ok(SubstrateSigner::new(
-            &self.tesseract,
-            response,
-            self.api.metadata(),
-        ))
+        let mut account = self.account.lock().await;
+        match account.as_ref() {
+            Some(acc) => Ok(SubstrateSigner::new(
+                &self.tesseract,
+                acc.clone(),
+                self.api.metadata(),
+            )),
+            None => {
+                let response = Arc::clone(&self.tesseract)
+                    .get_account(AccountType::Sr25519)
+                    .await?;
+                *account = Some(response.clone());
+                Ok(SubstrateSigner::new(
+                    &self.tesseract,
+                    response,
+                    self.api.metadata(),
+                ))
+            }
+        }
     }
 
     pub async fn add(&self, text: &str) -> Result<(), Box<dyn Error + Send + Sync>> {
         let mut call = ContractCallCall::<<PolkadotConfig as Config>::Address>::new_call(
             self.contract.clone().into(),
             0,
-            Weight::from_ref_time(9_375_000_000),
+            Weight::from_parts(100_000_000_000, 0),
             None,
             contract::calls::ADD,
         );
