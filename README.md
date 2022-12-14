@@ -16,7 +16,7 @@ This page is about **Tesseract shared Core** in Rust and **Tesseract Rust APIs**
 
 ## Getting started
 
-First, make sure, please, you have followed the [installation](#installation) section steps. Here we describe how to start using Tesseract in your dApp. To make your wallet Tesseract-compatible, please refer to the [Wallet Documentation](./tesseract-service/README.MD) section.
+First, make sure, please, you have followed the [installation](#installation) section steps. Here we describe how to start using Tesseract in your dApp. To make your wallet Tesseract-compatible, please refer to the [Wallet Documentation](./docs/SERVICE.MD) section.
 
 ### Initialize Tesseract Client
 
@@ -67,8 +67,8 @@ The Tesseract Rust library is a Core implementation of Tesseract Protocol and th
 
 The documentation is split into several sections respectively:
 * [Tesseract Overview](#Background) - general info about how Tesseract Protocol works
-* [Tesseract Client](./tesseract-client/) - for dApp developers
-* [Tesseract Service](./tesseract-service/) - for wallet developers
+* [Tesseract Client](./docs/CLIENT.MD) - for dApp developers
+* [Tesseract Service](./docs/SERVICE.MD/) - for wallet developers
 * [Extending Tesseract](./EXTENDING.MD) - for Blockchain protocol developers
 
 ## Background
