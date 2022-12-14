@@ -20,8 +20,8 @@ use std::error::Error;
 use std::str::FromStr;
 use std::sync::Arc;
 use subxt::{
-    ext::codec::Decode, ext::sp_runtime::AccountId32, rpc_params, tx::Signer, Config, OnlineClient,
-    PolkadotConfig,
+    ext::codec::Decode, ext::sp_core::Bytes, ext::sp_runtime::AccountId32, rpc_params, tx::Signer,
+    Config, OnlineClient, PolkadotConfig,
 };
 
 use tesseract::client::Service;
@@ -125,45 +125,43 @@ impl DApp {
         from: u32,
         to: u32,
     ) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
-        let mut query = ContractCallQuery::<<PolkadotConfig as Config>::Address>::new_call(
+        let mut query = ContractCallQuery::<<PolkadotConfig as Config>::AccountId>::new_call(
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            contract::GAS_LIMIT,
+            None,
             None,
             contract::calls::GET,
         );
         query = query.add_parameter(from).add_parameter(to);
         let at: Option<<PolkadotConfig as Config>::Hash> = None;
-        let params = rpc_params![query, at];
+        let params = rpc_params!["ContractsApi_call", query.as_param(), at];
         let response = self
             .api
             .rpc()
-            .request::<RpcContractCallResult>("contracts_call", params)
+            .request::<Bytes>("state_call", params)
             .await?;
-        let mut data: &[u8] = &response.result?.data;
-        let value = Vec::<String>::decode(&mut data)?;
+        let value: Vec<String> = parse_query_result(response)?.0;
         Ok(value)
     }
 
     pub async fn len(&self) -> Result<u32, Box<dyn Error + Send + Sync>> {
-        let query = ContractCallQuery::<<PolkadotConfig as Config>::Address>::new_call(
+        let query = ContractCallQuery::<<PolkadotConfig as Config>::AccountId>::new_call(
             self.contract.clone().into(),
             self.contract.clone().into(),
             0,
-            contract::GAS_LIMIT,
+            None,
             None,
             contract::calls::LEN,
         );
         let at: Option<<PolkadotConfig as Config>::Hash> = None;
-        let params = rpc_params![query, at];
+        let params = rpc_params!["ContractsApi_call", query.as_param(), at];
         let response = self
             .api
             .rpc()
-            .request::<RpcContractCallResult>("contracts_call", params)
+            .request::<Bytes>("state_call", params)
             .await?;
-        let mut data: &[u8] = &response.result?.data;
-        let value = u32::decode(&mut data)?;
+        let value = parse_query_result(response)?.0;
         Ok(value)
     }
 }

@@ -14,14 +14,14 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
+use pallet_contracts_primitives::ContractExecResult;
 use sp_weights::Weight;
+use std::error::Error;
 use subxt::{
     ext::{
-        codec::{Compact, Encode},
-        sp_core::bytes::{from_hex, serialize as bytes_hex_serialize},
-        sp_core::serde::{Deserialize, Serialize, Serializer},
+        codec::{Compact, Decode, Encode},
+        sp_core::{bytes::from_hex, Bytes},
         sp_runtime::scale_info::TypeInfo,
-        sp_runtime::MultiAddress,
     },
     tx::{StaticTxPayload, TxPayload},
 };
@@ -33,42 +33,17 @@ pub trait StaticCall {
     const CALL: &'static str;
 }
 
-pub trait SomeAddress: Encode + TypeInfo {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error>;
-}
-
-impl<Acc, Idx> SomeAddress for MultiAddress<Acc, Idx>
-where
-    MultiAddress<Acc, Idx>: Encode + TypeInfo,
-    Acc: Serialize,
-    Idx: Serialize,
-{
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        match self {
-            MultiAddress::Id(acc_id) => acc_id.serialize(serializer),
-            MultiAddress::Index(idx) => idx.serialize(serializer),
-            MultiAddress::Raw(vec) => bytes_hex_serialize(vec, serializer),
-            MultiAddress::Address32(addr32) => bytes_hex_serialize(addr32, serializer),
-            MultiAddress::Address20(addr20) => bytes_hex_serialize(addr20, serializer),
-        }
-    }
-}
-
-#[derive(Encode, Clone, TypeInfo, Serialize)]
-#[serde(rename_all = "camelCase")]
-#[serde(bound = "Address: SomeAddress")]
-pub struct ContractCallCall<Address: SomeAddress> {
-    #[serde(serialize_with = "SomeAddress::serialize")]
+#[derive(Encode, Clone, TypeInfo)]
+pub struct ContractCallCall<Address: Encode + TypeInfo> {
     dest: Address,
     #[codec(compact)]
     value: u128,
     gas_limit: Weight,
     storage_deposit_limit: Option<Compact<u128>>,
-    #[serde(with = "subxt::ext::sp_core::bytes")]
     input_data: Vec<u8>,
 }
 
-impl<Address: SomeAddress> ContractCallCall<Address> {
+impl<Address: Encode + TypeInfo> ContractCallCall<Address> {
     pub fn new(
         id: Address,
         value: u128,
@@ -101,16 +76,9 @@ impl<Address: SomeAddress> ContractCallCall<Address> {
         )
     }
 
-    pub fn add_parameter<P: Encode>(self, param: P) -> Self {
-        let mut data = self.input_data;
-        param.encode_to(&mut data);
-        Self {
-            dest: self.dest,
-            value: self.value,
-            gas_limit: self.gas_limit,
-            storage_deposit_limit: self.storage_deposit_limit,
-            input_data: data,
-        }
+    pub fn add_parameter<P: Encode>(mut self, param: P) -> Self {
+        param.encode_to(&mut self.input_data);
+        self
     }
 
     pub fn tx(self) -> impl TxPayload {
@@ -118,54 +86,56 @@ impl<Address: SomeAddress> ContractCallCall<Address> {
     }
 }
 
-impl<T: SomeAddress> StaticCall for ContractCallCall<T> {
+impl<T: Encode + TypeInfo> StaticCall for ContractCallCall<T> {
     /// Pallet name.
     const PALLET: &'static str = "Contracts";
     /// Call name.
     const CALL: &'static str = "call";
 }
 
-#[derive(Encode, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-#[serde(bound = "Address: SomeAddress")]
-pub struct ContractCallQuery<Address: SomeAddress> {
-    #[serde(serialize_with = "SomeAddress::serialize")]
-    origin: Address,
-    #[serde(flatten)]
-    call: ContractCallCall<Address>,
+#[derive(Encode, Clone)]
+pub struct ContractCallQuery<AccountId: Encode> {
+    origin: AccountId,
+    dest: AccountId,
+    value: u128,
+    gas_limit: Option<Weight>,
+    storage_deposit_limit: Option<u128>,
+    input_data: Vec<u8>,
 }
 
-impl<Address: SomeAddress> ContractCallQuery<Address> {
+impl<AccountId: Encode> ContractCallQuery<AccountId> {
     pub fn new_call(
-        id: Address,
-        from: Address,
+        contract: AccountId,
+        from: AccountId,
         value: u128,
-        gas_limit: Weight,
+        gas_limit: Option<Weight>,
         storage_deposit_limit: Option<u128>,
         method: &str,
     ) -> Self {
         Self {
             origin: from,
-            call: ContractCallCall::new_call(id, value, gas_limit, storage_deposit_limit, method),
+            dest: contract,
+            value,
+            gas_limit,
+            storage_deposit_limit,
+            input_data: from_hex(method).unwrap(),
         }
     }
 
-    pub fn add_parameter<P: Encode>(self, param: P) -> Self {
-        let call = self.call.add_parameter(param);
-        Self {
-            origin: self.origin,
-            call: call,
-        }
+    pub fn add_parameter<P: Encode>(mut self, param: P) -> Self {
+        param.encode_to(&mut self.input_data);
+        self
+    }
+
+    pub fn as_param(&self) -> Bytes {
+        self.encode().into()
     }
 }
 
-#[derive(Deserialize, Debug)]
-pub struct RpcContractCallResultOk {
-    #[serde(with = "subxt::ext::sp_core::bytes")]
-    pub data: Vec<u8>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct RpcContractCallResult {
-    pub result: Result<RpcContractCallResultOk, String>,
+pub fn parse_query_result<T: Decode>(
+    data: Bytes,
+) -> Result<(T, Weight), Box<dyn Error + Send + Sync>> {
+    let result = ContractExecResult::<u128>::decode(&mut data.as_ref())?;
+    let res_data = result.result.map_err(|err| format!("{:?}", err))?.data;
+    Ok((T::decode(&mut res_data.as_ref())?, result.gas_required))
 }
