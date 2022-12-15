@@ -14,7 +14,7 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-use futures::lock::Mutex;
+use futures::lock::{Mutex, MutexGuard};
 use sp_weights::Weight;
 use std::error::Error;
 use std::str::FromStr;
@@ -25,7 +25,7 @@ use subxt::{
 };
 
 use tesseract::client::Service;
-use tesseract_protocol_substrate::{AccountType, GetAccountResponse, Substrate, SubstrateService};
+use tesseract_protocol_substrate::{AccountType, Substrate, SubstrateService};
 
 use super::call::*;
 use super::signer::SubstrateSigner;
@@ -56,7 +56,7 @@ pub struct DApp {
     api: OnlineClient<PolkadotConfig>,
     contract: AccountId32,
     tesseract: Arc<dyn Service<Protocol = Substrate>>,
-    account: Mutex<Option<GetAccountResponse>>,
+    signer: Mutex<Option<SubstrateSigner>>,
 }
 
 impl DApp {
@@ -71,31 +71,25 @@ impl DApp {
             api,
             contract,
             tesseract,
-            account: Mutex::new(None),
+            signer: Mutex::new(None),
         })
     }
 
     async fn get_signer(
         &self,
-    ) -> Result<impl Signer<PolkadotConfig>, Box<dyn Error + Send + Sync>> {
-        let account = {
-            let mut account = self.account.lock().await;
-            match account.as_ref() {
-                Some(acc) => acc.clone(),
-                None => {
-                    let response = Arc::clone(&self.tesseract)
-                        .get_account(AccountType::Sr25519)
-                        .await?;
-                    *account = Some(response.clone());
-                    response
-                }
-            }
-        };
-        Ok(SubstrateSigner::new(
-            &self.tesseract,
-            account,
-            self.api.metadata(),
-        ))
+    ) -> Result<MutexGuard<Option<impl Signer<PolkadotConfig>>>, Box<dyn Error + Send + Sync>> {
+        let mut guard = self.signer.lock().await;
+        if guard.is_none() {
+            let response = Arc::clone(&self.tesseract)
+                .get_account(AccountType::Sr25519)
+                .await?;
+            *guard = Some(SubstrateSigner::new(
+                &self.tesseract,
+                response,
+                self.api.metadata(),
+            ));
+        }
+        Ok(guard)
     }
 
     pub async fn add(&self, text: &str) -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -111,7 +105,7 @@ impl DApp {
         let signer = self.get_signer().await?;
         self.api
             .tx()
-            .sign_and_submit_then_watch_default(&tx, &signer)
+            .sign_and_submit_then_watch_default(&tx, signer.as_ref().unwrap())
             .await?
             .wait_for_finalized_success()
             .await?
