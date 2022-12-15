@@ -25,7 +25,7 @@ This call allows the client to request the account information from the wallet.
 
 | Field | Type | Description |
 | --- | --- | --- |
-| account_type | AccountType | Type of the account supported by dApp |
+| account_type | AccountType | Type of the account supported by client |
 
 #### Response
 
@@ -50,7 +50,7 @@ This call allows the client to ask the wallet to sign the transaction (extrinsic
 | account_path | String | Path of the account (value returned from the `get_account` call) |
 | extrinsic_data | Data | SCALE encoded extrinsic data. See description below. |
 | extrinsic_metadata | Data | SCALE encoded extrinsic metadata. See description below. |
-| extrinsic_types | Data | SCALE encoded type registry with all used types. |
+| extrinsic_types | Data | SCALE encoded type registry with all used types. See description below. |
 
 ##### field: `extrinsic_data`
 
@@ -60,9 +60,9 @@ Current structure in the extrinsic v4:
 ```js
 {
   /// Call pallet index.
-	pallet_index: UInt8, 
+  pallet_index: UInt8, 
   /// Call index in the pallet.
-	call_index: UInt8, 
+  call_index: UInt8, 
   /// Serialized structure of the call,
   call_fields: {/* Call fields */},
   /// Extrinsic Extensions
@@ -81,18 +81,20 @@ This field is a SCALE encoded extrinsic metadata structure. Based on Extrinsic M
 ```js
 {
   /// The type of the Call (id from the registry).
-	type: UInt32, 
+  type: UInt32, 
   /// Extrinsic version (4 for now).
-	version: UInt8, 
+  version: UInt8, 
   /// The signed extensions in the order they appear in the extrinsic.
-	signed_extensions: [ {
+  signed_extensions: [
+    {
       /// The unique signed extension identifier, which may be different from the type name.
-	    identifier: String,
-	    /// The type of the signed extension, with the data to be included in the extrinsic (id from the registry).
-	    type: UInt32,
-	/// The type of the additional signed data, with the data to be included in the signed payload (id from the registry).
-	    additional_signed: UInt32
-  } ]
+      identifier: String,
+      /// The type of the signed extension, with the data to be included in the extrinsic (id from the registry).
+      type: UInt32,
+      /// The type of the additional signed data, with the data to be included in the signed payload (id from the registry).
+      additional_signed: UInt32
+    }
+  ]
 }
 ```
 ##### field: `extrinsic_types`
@@ -100,3 +102,9 @@ This field is a SCALE encoded extrinsic metadata structure. Based on Extrinsic M
 This field is a SCALE encoded types registry with all types used in the `extrinsic_metadata`.
 
 For more information, please, check the [DOCS](https://github.com/paritytech/scale-info/) from the Substrate.
+
+#### Response
+
+| Field | Type | Description |
+| --- | --- | --- |
+| signature | Data | 64/65 bytes of the signature (depending on the requested type) |
