@@ -99,9 +99,9 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* [x] Android support
 	* [x] iOS support
 
-* [ ] v0.3 - Polkadot network support
+* [x] v0.3 - Polkadot network support
 	* [x] in a separate branch
-	* [ ] merged
+	* [x] merged
 
 * [ ] v0.4 - demo applications
 	* Android Wallet
