@@ -124,6 +124,8 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 
 ## Changelog
 
+* v0.3 - Added Substrate support
+
 * v0.2 - IPC transport - allows dApps and Wallets to communicate on the same device
 	* Android support
 	* iOS support
