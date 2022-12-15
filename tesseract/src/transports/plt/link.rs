@@ -18,7 +18,7 @@
 
 use std::sync::{Arc, Mutex};
 
-use tesseract::service::TransportProcessor;
+use crate::service::TransportProcessor;
 
 pub struct LocalLink {
     processor: Mutex<Option<Arc<dyn TransportProcessor + Send + Sync>>>,

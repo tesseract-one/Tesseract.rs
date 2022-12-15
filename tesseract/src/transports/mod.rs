@@ -1,4 +1,4 @@
-//===------------ lib.rs --------------------------------------------===//
+//===------------------ mod.rs --------------------------------------------===//
 //  Copyright 2021, Tesseract Systems, Inc.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,24 +14,5 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-pub mod envelope;
-pub mod error;
-pub mod protocol;
-pub mod response;
-pub mod serialize;
-
-#[cfg(feature = "client")]
-pub mod client;
-
-#[cfg(feature = "service")]
-pub mod service;
-
-#[cfg(feature = "transports")]
-pub mod transports;
-
-pub use error::Error;
-pub use error::ErrorKind;
-pub use error::Result;
-pub use error::ResultDefs;
-
-pub use protocol::Protocol;
+#[cfg(feature = "transport-plt")]
+pub mod plt;

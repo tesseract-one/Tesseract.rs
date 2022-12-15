@@ -14,10 +14,16 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-pub mod client;
+#[cfg(feature = "service")]
 mod link;
+
+#[cfg(feature = "client")]
+pub mod client;
+
+#[cfg(feature = "service")]
 pub mod service;
 
+#[cfg(feature = "service")]
 pub use link::LocalLink;
 
 pub const PLT: &str = "plt";

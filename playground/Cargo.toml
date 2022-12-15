@@ -15,5 +15,5 @@ async-trait = "0.1"
 futures = { version = "0.3", features = ["thread-pool"] }
 serde = { version = "1.0", features = ["derive"] }
 
-tesseract = { path = "../tesseract", features=["client", "service"]}
+tesseract = { path = "../tesseract", features=["client", "service", "transport-plt"]}
 tesseract-protocol-test = { path = "../protocols/test", features=["client", "service"]}

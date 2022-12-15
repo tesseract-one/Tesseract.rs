@@ -32,11 +32,11 @@ pub struct Error {
     pub description: Option<String>,
 
     #[serde(skip)]
-    cause: Option<Box<dyn error::Error + Send>>,
+    cause: Option<Box<dyn error::Error + Send + Sync>>,
 }
 
 impl Error {
-    pub fn new<E: error::Error + Send + 'static>(
+    pub fn new<E: error::Error + Send + Sync + 'static>(
         kind: ErrorKind,
         description: &str,
         cause: E,
@@ -51,7 +51,7 @@ impl Error {
     pub fn new_boxed_error(
         kind: ErrorKind,
         description: &str,
-        cause: Box<dyn error::Error + Send>,
+        cause: Box<dyn error::Error + Send + Sync>,
     ) -> Self {
         Error {
             kind: kind,
@@ -76,7 +76,7 @@ impl Error {
         }
     }
 
-    pub fn nested(cause: Box<dyn error::Error + Send>) -> Self {
+    pub fn nested(cause: Box<dyn error::Error + Send + Sync>) -> Self {
         Error {
             kind: ErrorKind::Weird,
             description: None,

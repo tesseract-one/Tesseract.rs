@@ -16,17 +16,17 @@
 
 use std::sync::Arc;
 
-use tesseract::service::BoundTransport;
-use tesseract::service::Transport;
-use tesseract::service::TransportProcessor;
+use crate::service::BoundTransport;
+use crate::service::Transport;
+use crate::service::TransportProcessor;
 
 use super::link::LocalLink;
 
-pub struct ServiceLocalTransport {
+pub struct LocalTransport {
     link: Arc<LocalLink>,
 }
 
-impl ServiceLocalTransport {
+impl LocalTransport {
     pub fn new(link: &Arc<LocalLink>) -> Self {
         Self {
             link: Arc::clone(link),
@@ -38,7 +38,7 @@ struct BoundLocalTransport {}
 
 impl BoundTransport for BoundLocalTransport {}
 
-impl Transport for ServiceLocalTransport {
+impl Transport for LocalTransport {
     fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport> {
         self.link.set_processor(processor);
         Box::new(BoundLocalTransport {})
