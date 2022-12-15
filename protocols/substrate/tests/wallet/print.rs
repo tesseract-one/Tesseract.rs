@@ -46,15 +46,17 @@ pub fn print_extrinsic_data(
         })
         .collect::<std::result::Result<_, _>>()?;
 
-    println!("Call: {}", call);
-
+    println!("=================== Signing Extrinsic ===================");
+    println!("======== Call ========\n{}", call);
+    println!("======== Extension Extras ========");
     for (name, val) in extra {
-        println!("Extension Extra [{}]: {}", name, val);
+        println!("{}: {}", name, val);
     }
-
+    println!("======== Extension Additional Signed ========");
     for (name, val) in additional {
-        println!("Extension Additional [{}]: {}", name, val);
+        println!("{}: {}", name, val);
     }
+    println!("===================");
 
     Ok(())
 }

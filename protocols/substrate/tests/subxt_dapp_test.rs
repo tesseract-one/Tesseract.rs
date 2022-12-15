@@ -49,11 +49,16 @@ async fn run_test(
     let random = Alphanumeric.sample_string(&mut thread_rng(), 4);
     let text = format!("substrate protocol test message {}", random);
 
+    println!("\n\nCurrent test string: '{}'\n", text);
+
     dapp.add(&text).await?;
     let len = dapp.len().await?;
     let texts = dapp
         .get(len.checked_sub(20).or(Some(0)).unwrap(), len)
         .await?;
+
+    println!("Smart Contract last stored texts: {:?}", texts);
+
     assert!(texts.contains(&text));
 
     Ok(())
