@@ -15,6 +15,7 @@
 //===----------------------------------------------------------------------===//
 
 use futures::executor;
+use std::error::Error;
 use std::sync::Arc;
 use subxt::ext::codec::Encode;
 use subxt::ext::frame_metadata::v14::ExtrinsicMetadata;
@@ -56,8 +57,7 @@ impl SubstrateSigner {
     fn get_medatada_info(
         &self,
         extrinsic_data: &[u8],
-    ) -> Result<(ExtrinsicMetadata<PortableForm>, PortableRegistry), Box<dyn std::error::Error>>
-    {
+    ) -> Result<(ExtrinsicMetadata<PortableForm>, PortableRegistry), Box<dyn Error>> {
         let pallet_idx = extrinsic_data[0];
         let pallet = self
             .metadata
