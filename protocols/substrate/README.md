@@ -1,110 +1,82 @@
-# Tesseract Substrate Protocol Specification
+# Tesseract Substrate protocol
 
-The version of the protocol will be incremented when new calls are added, or the Extrinsic Metadata format is changed.
+## You can find full protocol specification [here](./SPECIFICATION.md)
 
----
-## Version 1
+```rust
+use tesseract::client::Tesseract;
+use tesseract::client::delegate::SingleTransportDelegate;
 
-Protocol ID: `substrate-v1`
+use tesseract_protocol_substrate::Substrate;
 
-### enum: `AccountType`
+let client_tesseract = Tesseract::new(client::delegate::SingleTransportDelegate::arc())
+    .transport(your_transport_here);
+    
+let client_service = client_tesseract.service(Substrate::Protocol); //you can start calling methods of protocol
+```
 
-This enum is used in calls to specify type of the account.
+## ID
 
-| Value | Variant |
-| :---: | --- | 
-| 0x01 | Ed25519 |
-| 0x02 | Sr25519 |
-| 0x03 | Ecdsa |
+```rust
+tesseract_protocol_substrate::Substrate::Protocol
+```
 
-### call: `get_account`
+## Definition
 
-This call allows the client to request the account information from the wallet.
+### Protocol
+```rust
+#[async_trait]
+pub trait SubstrateService {
+    async fn get_account(self: Arc<Self>, account_type: AccountType) -> Result<GetAccountResponse>;
 
-#### Request
-
-| Field | Type | Description |
-| --- | --- | --- |
-| account_type | AccountType | Type of the account supported by client |
-
-#### Response
-
-| Field | Type | Description |
-| --- | --- | --- |
-| public_key | Data | Account public key bytes. 32 or 33 bytes (depends on the requested type) |
-| path | String |  Unique string ID of the account |
-
-Path is a unique id value for the account. For BIP-32 HD wallets can be a BIP-44 path string.
-
-Client should never expect meaningfull data in the `path` field. It should be stored as-is and can be changed by the wallet at any time.
-
-### call: `sign_transaction`
-
-This call allows the client to ask the wallet to sign the transaction (extrinsic).
-
-#### Request
-
-| Field | Type | Description |
-| --- | --- | --- |
-| account_type | AccountType | Type of the account |
-| account_path | String | Path of the account (value returned from the `get_account` call) |
-| extrinsic_data | Data | SCALE encoded extrinsic data. See description below. |
-| extrinsic_metadata | Data | SCALE encoded extrinsic metadata. See description below. |
-| extrinsic_types | Data | SCALE encoded type registry with all used types. See description below. |
-
-##### field: `extrinsic_data`
-
-This field is complete SCALE encoded extrinsic data prepared for signing. Can be signed without parsing (but shouldn’t, not secure).
-
-Current structure in the extrinsic v4:
-```js
-{
-  /// Call pallet index.
-  pallet_index: UInt8, 
-  /// Call index in the pallet.
-  call_index: UInt8, 
-  /// Serialized structure of the call,
-  call_fields: {/* Call fields */},
-  /// Extrinsic Extensions
-  extensions: [ /* Extension Data */ ],
-  /// Extrinsic Additional Signed
-  additonal_signed: [ /* Extension Additional Signed */ ]
+    async fn sign_transaction(
+        self: Arc<Self>,
+        account_type: AccountType,
+        account_path: &str,
+        extrinsic_data: &[u8],
+        extrinsic_metadata: &[u8],
+        extrinsic_types: &[u8],
+    ) -> Result<Vec<u8>>;
 }
 ```
 
-Type info for `call`, `extensions` and `additonal_signed` provided in the `extrinsic_metadata`.
-
-##### field: `extrinsic_metadata`
-
-This field is a SCALE encoded extrinsic metadata structure. Based on Extrinsic Metadata v14 with extrinsic type id replaced by current call type id.
-
-```js
-{
-  /// The type of the Call (id from the registry).
-  type: UInt32, 
-  /// Extrinsic version (4 for now).
-  version: UInt8, 
-  /// The signed extensions in the order they appear in the extrinsic.
-  signed_extensions: [
-    {
-      /// The unique signed extension identifier, which may be different from the type name.
-      identifier: String,
-      /// The type of the signed extension, with the data to be included in the extrinsic (id from the registry).
-      type: UInt32,
-      /// The type of the additional signed data, with the data to be included in the signed payload (id from the registry).
-      additional_signed: UInt32
-    }
-  ]
+### Account types
+```rust
+pub enum AccountType {
+    Ed25519 = 1,
+    Sr25519 = 2,
+    Ecdsa = 3,
 }
 ```
-##### field: `extrinsic_types`
 
-This field is a SCALE encoded types registry with all types used in the `extrinsic_metadata`.
+### Get account response
+```rust
+pub struct GetAccountResponse {
+    pub public_key: Vec<u8>, // Public key of the account. 32/33 bytes depending of the AccountType
+    pub path: String,        // Derivation path or id of the account.
+}
+```
 
-For more information, please, check the [DOCS](https://github.com/paritytech/scale-info/) from the Substrate.
+## Methods
 
-#### Response
+### get_account
 
-| Field | Type | Description |
-| --- | --- | --- |
-| signature | Data | 64/65 bytes of the signature (depending on the requested type) |
+Requests wallet for the user account (public key).
+
+```rust
+let account = Arc::clone(&client_service).get_account(AccountType::Sr25519).await;
+```
+
+### sign_transaction
+
+Requests wallet to sign a transaction. Returns a signed string.
+
+```rust
+let signature = Arc::clone(&client_service).sign_transaction(
+    AccountType::Sr25519,
+    account.path,
+    // <tx bytes>,
+    // <medatata bytes>,
+    // <registry bytes>
+).await;
+```
+
