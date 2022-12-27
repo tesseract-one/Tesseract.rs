@@ -1,6 +1,8 @@
 # Tesseract Substrate protocol
 
-## You can find full protocol specification [here](./SPECIFICATION.md)
+### You can find full protocol specification [here](./SPECIFICATION.md)
+
+## Client initialization
 
 ```rust
 use tesseract::client::Tesseract;
