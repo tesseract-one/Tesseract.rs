@@ -70,7 +70,7 @@ let account = Arc::clone(&client_service).get_account(AccountType::Sr25519).awai
 
 ### sign_transaction
 
-Requests wallet to sign a transaction. Returns a signed string.
+Requests wallet to sign a transaction. Returns a signature bytes.
 
 ```rust
 let signature = Arc::clone(&client_service).sign_transaction(
