@@ -104,11 +104,10 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* [x] in a separate branch
 	* [x] merged
 
-* [ ] v0.4 - demo applications
-	* Android Wallet
-	* Androif dApp
-	* iOS Wallet
-	* iOS dApps
+* [x] v0.4 - demo applications
+	* [Polkachat](https://github.com/tesseract-one/polkachat.rs) - demo dApp for Polkadot network
+	* [Developer Wallet](https://github.com/tesseract-one/dev-wallet) - a wallet for developers testing their dApps
+
 
 * [ ] v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
 	* [ ] Swift
@@ -124,6 +123,10 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* more native language libraries (i.e. JS)
 
 ## Changelog
+
+* v0.4 - Added demos:
+	* [Polkachat](https://github.com/tesseract-one/polkachat.rs) - demo dApp for Polkadot network
+	* [Developer Wallet](https://github.com/tesseract-one/dev-wallet) - a wallet for developers testing their dApps
 
 * v0.3 - Added Substrate support
 
