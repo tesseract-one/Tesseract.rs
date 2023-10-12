@@ -4,6 +4,7 @@
 
 members = [
     "tesseract",
+    "error-context",
     "playground",
     "protocols/substrate",
     "protocols/test"

@@ -1,0 +1,19 @@
+# Licensed under the Apache License, Version 2.0.
+
+[package]
+name = "error-context"
+version = "0.1.0"
+authors = ["Daniel Leping", "Tesseract Systems, Inc. <contact@tesseract.one>"]
+description = "A small crate for scoping errors and easier error conversion"
+edition = "2018"
+license = "Apache-2.0"
+
+homepage = "https://github.com/tesseract-one/"
+repository = "https://github.com/tesseract-one/Tesseract.rs"
+readme = "README.MD"
+categories = ["data-structures", "no-std", "rust-patterns"]
+keywords = ["error", "conversion", "from", "into", "context"]
+
+[features]
+default = []
+nostd = []
