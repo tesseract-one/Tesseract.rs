@@ -14,7 +14,7 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-use std::{error, fmt};
+use std::{error, fmt::{self, Debug}};
 
 use serde::{Deserialize, Serialize};
 
@@ -30,33 +30,19 @@ pub enum ErrorKind {
 pub struct Error {
     pub kind: ErrorKind,
     pub description: Option<String>,
-
-    #[serde(skip)]
-    cause: Option<Box<dyn error::Error + Send + Sync>>,
 }
 
 impl Error {
-    pub fn new<E: error::Error + Send + Sync + 'static>(
+    pub fn new<E: error::Error>(
         kind: ErrorKind,
         description: &str,
         cause: E,
     ) -> Self {
-        Error {
-            kind: kind,
-            description: Some(description.to_owned()),
-            cause: Some(Box::new(cause)),
-        }
-    }
+        let description = format!("{}, caused by: {}", description, cause);
 
-    pub fn new_boxed_error(
-        kind: ErrorKind,
-        description: &str,
-        cause: Box<dyn error::Error + Send + Sync>,
-    ) -> Self {
         Error {
             kind: kind,
-            description: Some(description.to_owned()),
-            cause: Some(cause),
+            description: Some(description),
         }
     }
 
@@ -64,7 +50,6 @@ impl Error {
         Error {
             kind: kind,
             description: None,
-            cause: None,
         }
     }
 
@@ -72,15 +57,6 @@ impl Error {
         Error {
             kind: kind,
             description: Some(description.to_owned()),
-            cause: None,
-        }
-    }
-
-    pub fn nested(cause: Box<dyn error::Error + Send + Sync>) -> Self {
-        Error {
-            kind: ErrorKind::Weird,
-            description: None,
-            cause: Some(cause),
         }
     }
 }
@@ -104,24 +80,17 @@ impl fmt::Display for Error {
             Some(description) => ": ".to_owned() + &description,
         };
 
-        let caused_by = match self.cause.as_ref() {
-            None => "".to_owned(),
-            Some(cause) => " Caused by:\n\t".to_owned() + &cause.to_string(),
-        };
-
         write!(
             f,
-            "{} Tesseract error{}.{}",
-            self.kind, description, caused_by
+            "{} Tesseract error: {}",
+            self.kind, description
         )
     }
 }
 
 impl error::Error for Error {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        self.cause
-            .as_ref()
-            .map(|b| b.as_ref() as &(dyn error::Error))
+        None
     }
 }
 
@@ -136,11 +105,9 @@ impl<T> ResultDefs<T> for Result<T> {
     const CANCELLED: Result<T> = Result::Err(Error {
         kind: ErrorKind::Cancelled,
         description: None,
-        cause: None,
     });
     const WEIRD: Result<T> = Result::Err(Error {
         kind: ErrorKind::Weird,
         description: None,
-        cause: None,
     });
 }
