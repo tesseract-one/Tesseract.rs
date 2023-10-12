@@ -1,7 +1,7 @@
 # Licensed under the Apache License, Version 2.0.
 
 [package]
-name = "error-context"
+name = "errorcon"
 version = "0.1.0"
 authors = ["Daniel Leping", "Tesseract Systems, Inc. <contact@tesseract.one>"]
 description = "A small crate for scoping errors and easier error conversion"
