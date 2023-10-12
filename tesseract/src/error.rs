@@ -59,6 +59,15 @@ impl Error {
             description: Some(description.to_owned()),
         }
     }
+
+    pub fn nested<E: error::Error>(cause: E) -> Self {
+        let description = format!("A weird Tesseract error caused by: {}", cause);
+
+        Error {
+            kind: ErrorKind::Weird,
+            description: Some(description),
+        }
+    }
 }
 
 impl fmt::Display for ErrorKind {
