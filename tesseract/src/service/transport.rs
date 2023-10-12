@@ -28,5 +28,5 @@ pub trait TransportProcessor {
 pub trait BoundTransport {}
 
 pub trait Transport {
-    fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport>;
+    fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport + Send>;
 }

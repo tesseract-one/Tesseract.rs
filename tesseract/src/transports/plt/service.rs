@@ -39,7 +39,7 @@ struct BoundLocalTransport {}
 impl BoundTransport for BoundLocalTransport {}
 
 impl Transport for LocalTransport {
-    fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport> {
+    fn bind(self, processor: Arc<dyn TransportProcessor + Send + Sync>) -> Box<dyn BoundTransport + Send> {
         self.link.set_processor(processor);
         Box::new(BoundLocalTransport {})
     }

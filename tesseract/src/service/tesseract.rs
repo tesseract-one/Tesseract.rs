@@ -25,7 +25,7 @@ use super::transport::Transport;
 
 pub struct Tesseract {
     processor: Arc<Processor>,
-    transports: Vec<Box<dyn BoundTransport>>,
+    transports: Vec<Box<dyn BoundTransport + Send>>,
 }
 
 impl Tesseract {
