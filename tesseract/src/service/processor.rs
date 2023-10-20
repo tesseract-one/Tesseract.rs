@@ -59,7 +59,12 @@ impl Processor {
         let method = header.method;
 
         let executors = self.executors.lock().await;
-        let executor = Arc::clone(executors.get(&protocol).unwrap()); //TODO: error handling
+        let executor = Arc::clone(executors.get(&protocol).ok_or_else(|| {
+            let protocols: Vec<&String> = executors.keys().collect();
+            let description = format!("Can't find service for protocol: {}. Services are registered for the following protocols: {:#?}", &protocol, protocols);
+
+            crate::Error::described(crate::ErrorKind::Weird, &description)
+        })?);
 
         Ok(executor.call(serializer, &method, data).await)
     }
