@@ -22,13 +22,15 @@ use futures::Future;
 use futures::FutureExt;
 
 use crate::Protocol;
+use crate::Error;
 
 use super::connection::Connection;
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Status {
     Ready,
     Unavailable(String),
-    Error(Box<dyn std::error::Error + Send + Sync>),
+    Error(Error),
 }
 
 #[async_trait]
