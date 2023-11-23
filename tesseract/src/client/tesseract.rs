@@ -39,7 +39,7 @@ pub struct Tesseract {
 }
 
 impl Tesseract {
-    pub fn new_with_serializer(delegate: Arc<impl Delegate + Sync + Send + 'static>, serializer: Serializer) -> Self {
+    pub fn new_with_serializer(delegate: Arc<dyn Delegate + Sync + Send + 'static>, serializer: Serializer) -> Self {
         Tesseract {
             delegate: delegate,
             serializer: serializer,
@@ -47,7 +47,7 @@ impl Tesseract {
         }
     }
 
-    pub fn new(delegate: Arc<impl Delegate + Sync + Send + 'static>) -> Self {
+    pub fn new(delegate: Arc<dyn Delegate + Sync + Send + 'static>) -> Self {
         Self::new_with_serializer(delegate, Serializer::default())
     }
 
