@@ -32,14 +32,14 @@ use super::delegate::Delegate;
 use super::service::{Service, ServiceImpl};
 use super::transport::Transport;
 
-pub struct Tesseract<D: Delegate + Sync + Send> {
-    delegate: Arc<D>,
+pub struct Tesseract {
+    delegate: Arc<dyn Delegate + Sync + Send + 'static>,
     serializer: Serializer,
     transports: Vec<Arc<dyn Transport + Sync + Send>>,
 }
 
-impl<D: Delegate + Sync + Send> Tesseract<D> {
-    pub fn new_with_serializer(delegate: Arc<D>, serializer: Serializer) -> Self {
+impl Tesseract {
+    pub fn new_with_serializer(delegate: Arc<impl Delegate + Sync + Send + 'static>, serializer: Serializer) -> Self {
         Tesseract {
             delegate: delegate,
             serializer: serializer,
@@ -47,7 +47,7 @@ impl<D: Delegate + Sync + Send> Tesseract<D> {
         }
     }
 
-    pub fn new(delegate: Arc<D>) -> Self {
+    pub fn new(delegate: Arc<impl Delegate + Sync + Send + 'static>) -> Self {
         Self::new_with_serializer(delegate, Serializer::default())
     }
 
@@ -63,7 +63,7 @@ impl<D: Delegate + Sync + Send> Tesseract<D> {
     }
 }
 
-impl<D: Delegate + Send + Sync + 'static> Tesseract<D> {
+impl Tesseract {
     pub fn service<P: Protocol + Copy + 'static>(&self, r#for: P) -> Arc<impl Service<Protocol = P>> {
         let service_connection = self.conn_service(r#for);
 

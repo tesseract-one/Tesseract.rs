@@ -45,7 +45,7 @@ pub trait Delegate {
 
 impl<T> AsyncDelegate for T
 where
-    T: Delegate + Sync + Send,
+    T: Delegate + Sync + Send + ?Sized,
 {
     fn select_transport_async<'a>(
         self: &Arc<Self>,
