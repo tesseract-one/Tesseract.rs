@@ -18,7 +18,7 @@ use std::{error, fmt::{self, Debug}};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "kebab-case")]
 pub enum ErrorKind {
     Cancelled,
@@ -26,7 +26,7 @@ pub enum ErrorKind {
     Weird,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct Error {
     pub kind: ErrorKind,
     pub description: Option<String>,

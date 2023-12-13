@@ -26,7 +26,7 @@ use crate::Error;
 
 use super::connection::Connection;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Status {
     Ready,
     Unavailable(String),
