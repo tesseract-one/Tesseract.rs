@@ -14,8 +14,6 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-#![feature(return_position_impl_trait_in_trait)]
-
 #![cfg_attr(feature = "nostd", feature(error_in_core))]
 #![cfg_attr(feature = "nostd", no_std)]
 
