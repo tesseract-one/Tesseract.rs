@@ -1,7 +1,6 @@
 # Licensed under the Apache License, Version 2.0.
 
 [workspace]
-
 members = [
     "tesseract",
     "errorcon",
@@ -9,3 +8,10 @@ members = [
     "protocols/substrate",
     "protocols/test"
 ]
+
+resolver = "2"
+
+[workspace.dependencies]
+async-trait = "0.1"
+serde = "1.0"
+futures = "0.3"

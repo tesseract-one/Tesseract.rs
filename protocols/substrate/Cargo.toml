@@ -13,8 +13,8 @@ service = ["tesseract/service"]
 # default = ["client", "service"]
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-async-trait = { version = "0.1"}
+serde = { workspace = true, features = ["derive"] }
+async-trait = { workspace = true }
 tesseract = { path = "../../tesseract" }
 
 [dev-dependencies]
