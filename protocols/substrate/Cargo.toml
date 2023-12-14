@@ -1,11 +1,16 @@
 # Licensed under the Apache License, Version 2.0.
 [package]
 name = "tesseract-protocol-substrate"
-version = "0.1.0"
-authors = ["Tesseract Systems, Inc. <contact@tesseract.one>"]
 description = "Tesseract protocol for Substrate based networks"
-edition = "2021"
-license = "Apache-2.0"
+
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+documentation.workspace = true
+readme.workspace = true
+authors.workspace = true
 
 [features]
 client = ["tesseract/client"]

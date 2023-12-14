@@ -1,5 +1,15 @@
 # Licensed under the Apache License, Version 2.0.
 
+[workspace.package]
+authors = ["Daniel Leping", "Yehor Popovych", "Tesseract Systems, Inc."]
+edition = "2021"
+version = "0.5.5"
+license = "Apache-2.0"
+readme = "README.MD"
+repository = "https://github.com/tesseract-one/Tesseract.rs"
+documentation = "https://github.com/tesseract-one/Tesseract.rs"
+homepage = "https://github.com/tesseract-one/"
+
 [workspace]
 members = [
     "tesseract",

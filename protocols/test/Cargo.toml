@@ -2,11 +2,16 @@
 
 [package]
 name = "tesseract-protocol-test"
-version = "0.1.0"
-authors = ["Tesseract Systems, Inc. <contact@tesseract.one>"]
 description = "Tesseract protocol for testing tessract, transports, etc. Useful when you don't want to handle real transactions yet."
-edition = "2021"
-license = "Apache-2.0"
+
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+documentation.workspace = true
+readme.workspace = true
+authors.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
