@@ -4,7 +4,7 @@
 name = "tesseract-protocol-test"
 description = "Tesseract protocol for testing tessract, transports, etc. Useful when you don't want to handle real transactions yet."
 readme = "README.MD"
-keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol", "test"]
+keywords = ["blockchain", "dApp", "wallet", "protocol", "test"]
 
 version.workspace = true
 edition.workspace = true

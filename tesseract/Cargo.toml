@@ -3,7 +3,7 @@
 [package]
 name = "tesseract-one"
 description = "Tesseract is a universal dApp/Wallet bridge. This crate implements the communication protocol and is the framework for implementation of blockchain protocols and data transports."
-keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol"]
+keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge"]
 
 version.workspace = true
 edition.workspace = true

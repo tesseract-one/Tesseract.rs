@@ -3,7 +3,7 @@
 name = "tesseract-protocol-substrate"
 description = "Tesseract protocol for Substrate based networks"
 readme = "README.md"
-keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol", "substrate", "polkadot"]
+keywords = ["blockchain", "dApp", "wallet", "protocol", "substrate"]
 
 version.workspace = true
 edition.workspace = true
