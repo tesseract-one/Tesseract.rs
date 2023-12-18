@@ -21,7 +21,7 @@ extern crate async_trait;
 extern crate futures;
 extern crate rand;
 extern crate subxt;
-extern crate tesseract;
+extern crate tesseract_one;
 extern crate tesseract_protocol_substrate;
 
 use rand::distributions::{Alphanumeric, DistString};
@@ -30,8 +30,8 @@ use std::error::Error;
 use std::sync::Arc;
 use subxt::ext::sp_core::{sr25519, Pair};
 
-use tesseract::client::delegate::SingleTransportDelegate;
-use tesseract::{client, service};
+use tesseract_one::client::delegate::SingleTransportDelegate;
+use tesseract_one::{client, service};
 use tesseract_protocol_substrate::Substrate;
 
 use dapp::DApp;
@@ -66,18 +66,18 @@ async fn run_test(
 
 #[tokio::test]
 async fn test_dapp_local() {
-    let link = Arc::new(tesseract::transports::plt::LocalLink::new());
+    let link = Arc::new(tesseract_one::transports::plt::LocalLink::new());
 
     let (pair, _) = sr25519::Pair::from_phrase(WALLET_PHRASE, None).unwrap();
     let substrate_service = WalletService::new(pair);
     let _ = service::Tesseract::new()
-        .transport(tesseract::transports::plt::service::LocalTransport::new(
+        .transport(tesseract_one::transports::plt::service::LocalTransport::new(
             &link,
         ))
         .service(substrate_service);
 
     let client_tesseract = client::Tesseract::new(SingleTransportDelegate::arc()).transport(
-        tesseract::transports::plt::client::LocalTransport::new(&link),
+        tesseract_one::transports::plt::client::LocalTransport::new(&link),
     );
     let client = client_tesseract.service(Substrate::Protocol);
 

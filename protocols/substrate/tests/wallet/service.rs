@@ -17,8 +17,8 @@
 use async_trait::async_trait;
 use std::sync::Arc;
 use subxt::ext::sp_core::{sr25519, Pair};
-use tesseract::service::{Executor, Service};
-use tesseract::{Error, ErrorKind, Result};
+use tesseract_one::service::{Executor, Service};
+use tesseract_one::{Error, ErrorKind, Result};
 use tesseract_protocol_substrate::service::SubstrateExecutor;
 use tesseract_protocol_substrate::{AccountType, GetAccountResponse, Substrate, SubstrateService};
 
@@ -81,7 +81,7 @@ impl SubstrateService for WalletService {
         }
 
         print_extrinsic_data(extrinsic_data, extrinsic_metadata, extrinsic_types)
-            .map_err(|err| Error::nested(err))?;
+            .map_err(|err| Error::nested_dynamic(err.as_ref()))?;
 
         let signature = self.signer.sign(extrinsic_data);
         let bytes: &[u8] = signature.as_ref();

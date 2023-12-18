@@ -27,7 +27,7 @@ use subxt::ext::sp_runtime::{AccountId32, MultiSigner};
 use subxt::tx::Signer;
 use subxt::Metadata;
 
-use tesseract::client::Service;
+use tesseract_one::client::Service;
 use tesseract_protocol_substrate::{AccountType, GetAccountResponse, Substrate, SubstrateService};
 
 pub struct SubstrateSigner {

@@ -24,7 +24,7 @@ use subxt::{
     Config, OnlineClient, PolkadotConfig,
 };
 
-use tesseract::client::Service;
+use tesseract_one::client::Service;
 use tesseract_protocol_substrate::{AccountType, Substrate, SubstrateService};
 
 use super::call::*;

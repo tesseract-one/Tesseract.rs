@@ -61,6 +61,10 @@ impl Error {
     }
 
     pub fn nested<E: error::Error>(cause: E) -> Self {
+        Self::nested_dynamic(&cause)
+    }
+
+    pub fn nested_dynamic(cause: &dyn error::Error) -> Self {
         let description = format!("A weird Tesseract error caused by: {}", cause);
 
         Error {

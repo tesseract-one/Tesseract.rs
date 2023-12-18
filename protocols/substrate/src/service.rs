@@ -18,11 +18,11 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 
-use tesseract::serialize::Serializer;
+use tesseract_one::serialize::Serializer;
 
-use tesseract::service::Executor;
-use tesseract::service::MethodExecutor;
-use tesseract::service::Service;
+use tesseract_one::service::Executor;
+use tesseract_one::service::MethodExecutor;
+use tesseract_one::service::Service;
 
 use super::GetAccountRequest;
 use super::SignTransactionRequest;

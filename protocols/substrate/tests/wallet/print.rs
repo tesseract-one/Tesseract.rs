@@ -14,7 +14,7 @@
 //  limitations under the License.
 //===----------------------------------------------------------------------===//
 
-use std::error::Error;
+use anyhow::Error;
 use subxt::ext::codec::Decode;
 use subxt::ext::frame_metadata::v14::ExtrinsicMetadata;
 use subxt::ext::scale_value::scale::{decode_as_type, PortableRegistry};
@@ -24,7 +24,7 @@ pub fn print_extrinsic_data(
     extrinsic_data: &[u8],
     extrinsic_metadata: &[u8],
     extrinsic_types: &[u8],
-) -> Result<(), Box<dyn Error + Send + Sync>> {
+) -> Result<(), Error> {
     let types: PortableRegistry = Decode::decode(&mut &extrinsic_types[..])?;
     let meta: ExtrinsicMetadata<PortableForm> = Decode::decode(&mut &extrinsic_metadata[..])?;
     let data = &mut &extrinsic_data[1..];
