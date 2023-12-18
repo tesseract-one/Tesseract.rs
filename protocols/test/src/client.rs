@@ -18,10 +18,10 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 
-use tesseract::Result;
+use tesseract_one::Result;
 
-use tesseract::client::ErasedService;
-use tesseract::client::Service;
+use tesseract_one::client::ErasedService;
+use tesseract_one::client::Service;
 
 use super::Test;
 use super::SignTransactionRequest;

@@ -27,8 +27,8 @@ use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 
-use tesseract::error::Result;
-use tesseract::Protocol;
+use tesseract_one::error::Result;
+use tesseract_one::Protocol;
 
 #[derive(Clone, Copy)]
 pub enum Substrate {

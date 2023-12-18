@@ -1,8 +1,8 @@
 # Licensed under the Apache License, Version 2.0.
 
 [package]
-name = "tesseract"
-description = "Base code for both, Tesseract client and service."
+name = "tesseract-one"
+description = "Tesseract is a universal dApp/Wallet bridge. This crate implements the communication protocol and is the framework for implementation of blockchain protocols and data transports."
 
 version.workspace = true
 edition.workspace = true
@@ -26,6 +26,6 @@ serde = { workspace = true, features = ["derive"] }
 serde_json = "1.0"
 serde_cbor = "0.11"
 
-futures = { workspace = true }
+futures.workspace = true
 
 async-trait = { workspace = true, optional = true }

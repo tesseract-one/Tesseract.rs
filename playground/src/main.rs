@@ -24,27 +24,27 @@ use async_trait::async_trait;
 use futures;
 use futures::FutureExt;
 
-use tesseract::Error;
-use tesseract::ErrorKind;
-use tesseract::Result;
+use tesseract_one::Error;
+use tesseract_one::ErrorKind;
+use tesseract_one::Result;
 
-use tesseract::client;
+use tesseract_one::client;
 
-use tesseract::transports::plt::LocalLink;
+use tesseract_one::transports::plt::LocalLink;
 
 use tesseract_protocol_test::Test;
 
 //WALLET PART BEGIN//
 struct TestPolkadotService {}
 
-impl tesseract::service::Service for TestPolkadotService {
+impl tesseract_one::service::Service for TestPolkadotService {
     type Protocol = Test;
 
     fn protocol(&self) -> &Test {
         &Test::Protocol
     }
 
-    fn to_executor(self) -> Box<dyn tesseract::service::Executor + Send + Sync> {
+    fn to_executor(self) -> Box<dyn tesseract_one::service::Executor + Send + Sync> {
         Box::new(tesseract_protocol_test::service::TestExecutor::from_service(self))
     }
 }
@@ -85,8 +85,8 @@ fn main() {
     let link = Arc::new(LocalLink::new());
 
     //WALLET PART BEGIN//
-    let _ = tesseract::service::Tesseract::new()
-        .transport(tesseract::transports::plt::service::LocalTransport::new(
+    let _ = tesseract_one::service::Tesseract::new()
+        .transport(tesseract_one::transports::plt::service::LocalTransport::new(
             &link,
         ))
         .service(TestPolkadotService {});
@@ -97,7 +97,7 @@ fn main() {
     //let delegate = Arc::new(ClientDelegate {});
     //let client_tesseract = tesseract_client::Tesseract::new(delegate)
     let client_tesseract = client::Tesseract::new(client::delegate::SingleTransportDelegate::arc())
-        .transport(tesseract::transports::plt::client::LocalTransport::new(
+        .transport(tesseract_one::transports::plt::client::LocalTransport::new(
             &link,
         ));
     let client_service = client_tesseract.service(Test::Protocol);

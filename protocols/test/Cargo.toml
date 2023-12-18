@@ -16,10 +16,10 @@ authors.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-client = ["tesseract/client"]
-service = ["tesseract/service"]
+client = ["tesseract-one/client"]
+service = ["tesseract-one/service"]
 
 [dependencies]
 serde = { workspace = true, features = ["derive"] }
-async-trait = { workspace = true }
-tesseract = { path = "../../tesseract" }
+async-trait.workspace = true
+tesseract-one.workspace = true

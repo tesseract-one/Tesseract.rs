@@ -27,8 +27,8 @@ use async_trait::async_trait;
 
 use serde::{Deserialize, Serialize};
 
-use tesseract::Protocol;
-use tesseract::error::Result;
+use tesseract_one::Protocol;
+use tesseract_one::error::Result;
 
 #[derive(Default, Clone, Copy)]
 pub enum Test {
