@@ -109,9 +109,9 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* [Developer Wallet](https://github.com/tesseract-one/dev-wallet) - a wallet for developers testing their dApps
 
 
-* [ ] v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
-	* [ ] Swift
-	* [ ] Kotlin/Java
+* [x] v0.5 - native language libraries (wrappers that provide native easy APIs for mobile developers)
+	* [x] Swift
+	* [x] Kotlin/Java
 
 * [ ] v1.0 - first stable release
 
@@ -123,6 +123,8 @@ In contrast, Tesseract is designed highly flexible to solve the issues mentioned
 	* more native language libraries (i.e. JS)
 
 ## Changelog
+
+* v0.5 - changes required to support Swift and Kotlin bindings. First official crates release.
 
 * v0.4 - Added demos:
 	* [Polkachat](https://github.com/tesseract-one/polkachat.rs) - demo dApp for Polkadot network
