@@ -3,6 +3,7 @@
 [package]
 name = "tesseract-one"
 description = "Tesseract is a universal dApp/Wallet bridge. This crate implements the communication protocol and is the framework for implementation of blockchain protocols and data transports."
+keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol"]
 
 version.workspace = true
 edition.workspace = true
@@ -12,6 +13,7 @@ repository.workspace = true
 documentation.workspace = true
 readme.workspace = true
 authors.workspace = true
+categories.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

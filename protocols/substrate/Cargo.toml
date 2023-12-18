@@ -2,6 +2,8 @@
 [package]
 name = "tesseract-protocol-substrate"
 description = "Tesseract protocol for Substrate based networks"
+readme = "README.md"
+keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol", "substrate", "polkadot"]
 
 version.workspace = true
 edition.workspace = true
@@ -9,8 +11,8 @@ license.workspace = true
 homepage.workspace = true
 repository.workspace = true
 documentation.workspace = true
-readme.workspace = true
 authors.workspace = true
+categories.workspace = true
 
 [features]
 client = ["tesseract-one/client"]

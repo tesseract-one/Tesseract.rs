@@ -3,6 +3,8 @@
 [package]
 name = "tesseract-protocol-test"
 description = "Tesseract protocol for testing tessract, transports, etc. Useful when you don't want to handle real transactions yet."
+readme = "README.MD"
+keywords = ["blockchain", "dApp", "wallet", "mobile", "bridge", "protocol", "test"]
 
 version.workspace = true
 edition.workspace = true
@@ -10,8 +12,8 @@ license.workspace = true
 homepage.workspace = true
 repository.workspace = true
 documentation.workspace = true
-readme.workspace = true
 authors.workspace = true
+categories.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

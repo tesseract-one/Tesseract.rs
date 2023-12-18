@@ -5,10 +5,11 @@ authors = ["Daniel Leping", "Yehor Popovych", "Tesseract Systems, Inc."]
 edition = "2021"
 version = "0.5.5"
 license = "Apache-2.0"
-readme = "README.MD"
+readme = "README.md"
 repository = "https://github.com/tesseract-one/Tesseract.rs"
 documentation = "https://github.com/tesseract-one/Tesseract.rs"
 homepage = "https://github.com/tesseract-one/"
+categories = ["authentication", "network-programming"]
 
 [workspace]
 members = [
@@ -24,4 +25,6 @@ resolver = "2"
 async-trait = "0.1"
 serde = "1.0"
 futures = "0.3"
-tesseract-one.path = "tesseract"
+
+#tesseract
+tesseract-one = { path = "tesseract", version = "0.5.5" }
